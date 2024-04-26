@@ -5,6 +5,8 @@ We define a graph processor class with some function skeletons.
 """
 
 from typing import List, Tuple
+import networkx as nx
+import matplotlib.pyplot as plt
 
 
 class IDNotFoundError(Exception):
@@ -68,8 +70,6 @@ class GraphProcessor:
             edge_enabled: list of bools indicating of an edge is enabled or not
             source_vertex_id: vertex id of the source in the graph
         """
-        # put your implementation here
-        pass
 
     def find_downstream_vertices(self, edge_id: int) -> List[int]:
         """
