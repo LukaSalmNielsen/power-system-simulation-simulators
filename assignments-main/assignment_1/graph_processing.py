@@ -70,6 +70,11 @@ class GraphProcessor:
             edge_enabled: list of bools indicating of an edge is enabled or not
             source_vertex_id: vertex id of the source in the graph
         """
+        # Initialize a NetworkX graph
+        self.graph = nx.Graph()
+
+        # Add nodes to the graph
+        self.graph.add_nodes_from(vertex_ids)
 
     def find_downstream_vertices(self, edge_id: int) -> List[int]:
         """
