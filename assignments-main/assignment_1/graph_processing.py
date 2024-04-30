@@ -76,8 +76,10 @@ class GraphProcessor:
         # Add nodes/vertexes to the graph
         self.graph.add_nodes_from(vertex_ids)
 
-        # Add edgesto the graph
-        self.graph.add_edges_from(edge_vertex_id_pairs)
+        # Add edges to the graph
+        for edge_pair, enabled, edge_ids in zip(edge_vertex_id_pairs, edge_enabled, edge_ids):
+            if enabled:
+                self.graph.add_edge(*edge_pair, id=edge_ids)
 
         if source_vertex_id not in self.graph.nodes:
             raise IDNotFoundError("Source vertex ID not found.")
@@ -158,12 +160,21 @@ grid = GraphProcessor(vertex_ids, edge_ids, edge_vertex_id_pairs, edge_enabled, 
 
 plt.figure(figsize=(8, 6))
 pos = nx.spring_layout(grid.graph)  # Position nodes using the spring layout algorithm
-nx.draw(grid.graph, pos, with_labels=True, node_size=500, font_size=12, node_color="skyblue", edge_color="black", width=2)
+nx.draw(grid.graph, pos, with_labels=True)
 plt.title("Graph Visualization")
 plt.show()
+grid.graph.nodes.data()
 
 downstream_vertices = grid.find_downstream_vertices(1)
 print("Downstream vertices of edge 1:", downstream_vertices)
 
 alternative_edges = grid.find_alternative_edges(1)
 print("Alternative edges for disabling edge 1:", alternative_edges)
+
+# 1. Nodes
+nodes = grid.graph.nodes(data=True)
+print("Nodes:", nodes)
+
+# 2. Edges
+edges = grid.graph.edges(data=True)
+print("Edges:", edges)
