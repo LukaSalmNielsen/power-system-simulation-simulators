@@ -1,7 +1,13 @@
 """
-This is a skeleton for the graph processing assignment.
+Graph Processing Assignment
 
-We define a graph processor class with some function skeletons.
+This script defines a GraphProcessor class for processing undirected graphs. 
+It provides functionality to initialize a graph, find downstream vertices of an edge, 
+and identify alternative edges for ensuring graph connectivity.
+
+Authors: Rick Eversdijk, ...
+Date: 30/04/2024
+
 """
 
 from typing import List, Tuple
@@ -10,10 +16,12 @@ import matplotlib.pyplot as plt
 
 
 class IDNotFoundError(Exception):
+    """Exception raised when source_vertex_id is not a valid vertex id"""
     pass
 
 
 class InputLengthDoesNotMatchError(Exception):
+    """Exception raised when the length of the edge_enabled does not match the input lists edge_ids."""
     pass
 
 
@@ -35,9 +43,13 @@ class EdgeAlreadyDisabledError(Exception):
 
 class GraphProcessor:
     """
-    General documentation of this class.
-    You need to describe the purpose of this class and the functions in it.
-    We are using an undirected graph in the processor.
+    A class for processing undirected graphs.
+
+    This class provides functionality to initialize a graph, find downstream vertices
+    of an edge, and identify alternative edges for ensuring graph connectivity.
+
+    Attributes:
+        graph: A NetworkX graph representing the processed graph.
     """
 
     def __init__(
@@ -51,8 +63,16 @@ class GraphProcessor:
         """
         Initialize a graph processor object with an undirected graph.
         Only the edges which are enabled are taken into account.
-        Check if the input is valid and raise exceptions if not.
-        The following conditions should be checked:
+
+        Args:
+            vertex_ids: list of vertex ids
+            edge_ids: list of edge ids
+            edge_vertex_id_pairs: list of tuples of two integer
+                Each tuple is a vertex id pair of the edge.
+            edge_enabled: list of bools indicating of an edge is enabled or not
+            source_vertex_id: vertex id of the source in the graph
+
+        Raises:
             1. vertex_ids and edge_ids should be unique. (IDNotUniqueError)
             2. edge_vertex_id_pairs should have the same length as edge_ids. (InputLengthDoesNotMatchError)
             3. edge_vertex_id_pairs should contain valid vertex ids. (IDNotFoundError)
@@ -60,16 +80,16 @@ class GraphProcessor:
             5. source_vertex_id should be a valid vertex id. (IDNotFoundError)
             6. The graph should be fully connected. (GraphNotFullyConnectedError)
             7. The graph should not contain cycles. (GraphCycleError)
-        If one certain condition is not satisfied, the error in the parentheses should be raised.
-
-        Args:
-            vertex_ids: list of vertex ids
-            edge_ids: liest of edge ids
-            edge_vertex_id_pairs: list of tuples of two integer
-                Each tuple is a vertex id pair of the edge.
-            edge_enabled: list of bools indicating of an edge is enabled or not
-            source_vertex_id: vertex id of the source in the graph
         """
+        
+        # 5. Check if source vertex exists in the graph
+        if source_vertex_id not in self.graph.nodes:
+            raise IDNotFoundError("Source vertex ID not found.")
+        
+        # 4. Check if lengths of input lists match
+        if len(self.graph.nodes) != len(vertex_ids):
+            raise InputLengthDoesNotMatchError("Length of vertex IDs does not match number of vertices.")
+        
         # Initialize a NetworkX graph
         self.graph = nx.Graph()
 
@@ -80,9 +100,6 @@ class GraphProcessor:
         for edge_pair, enabled, edge_ids in zip(edge_vertex_id_pairs, edge_enabled, edge_ids):
             if enabled:
                 self.graph.add_edge(*edge_pair, id=edge_ids)
-
-        if source_vertex_id not in self.graph.nodes:
-            raise IDNotFoundError("Source vertex ID not found.")
 
     def find_downstream_vertices(self, edge_id: int) -> List[int]:
         """
@@ -171,10 +188,8 @@ print("Downstream vertices of edge 1:", downstream_vertices)
 alternative_edges = grid.find_alternative_edges(1)
 print("Alternative edges for disabling edge 1:", alternative_edges)
 
-# 1. Nodes
 nodes = grid.graph.nodes(data=True)
 print("Nodes:", nodes)
 
-# 2. Edges
 edges = grid.graph.edges(data=True)
 print("Edges:", edges)
