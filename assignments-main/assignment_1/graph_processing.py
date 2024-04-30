@@ -73,8 +73,11 @@ class GraphProcessor:
         # Initialize a NetworkX graph
         self.graph = nx.Graph()
 
-        # Add nodes to the graph
+        # Add nodes/vertexes to the graph
         self.graph.add_nodes_from(vertex_ids)
+
+        # Add edgesto the graph
+        self.graph.add_edges_from(edge_vertex_id_pairs)
 
     def find_downstream_vertices(self, edge_id: int) -> List[int]:
         """
@@ -140,3 +143,24 @@ class GraphProcessor:
         """
         # put your implementation here
         pass
+
+#Testing
+vertex_ids = [0, 2, 4, 6, 10]
+edge_ids = [1, 3, 5, 7, 8, 9]
+edge_vertex_id_pairs = [(0, 2), (2, 4), (4, 6), (0, 4), (2, 6), (6, 10)]
+edge_enabled = [True, True, True, False, False, True]
+source_vertex_id = 0
+
+grid = GraphProcessor(vertex_ids, edge_ids, edge_vertex_id_pairs, edge_enabled, source_vertex_id)
+
+plt.figure(figsize=(8, 6))
+pos = nx.spring_layout(grid.graph)  # Position nodes using the spring layout algorithm
+nx.draw(grid.graph, pos, with_labels=True, node_size=500, font_size=12, node_color="skyblue", edge_color="black", width=2)
+plt.title("Graph Visualization")
+plt.show()
+
+downstream_vertices = grid.find_downstream_vertices(1)
+print("Downstream vertices of edge 1:", downstream_vertices)
+
+alternative_edges = grid.find_alternative_edges(1)
+print("Alternative edges for disabling edge 1:", alternative_edges)
