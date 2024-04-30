@@ -82,14 +82,6 @@ class GraphProcessor:
             7. The graph should not contain cycles. (GraphCycleError)
         """
         
-        # 5. Check if source vertex exists in the graph
-        if source_vertex_id not in self.graph.nodes:
-            raise IDNotFoundError("Source vertex ID not found.")
-        
-        # 4. Check if lengths of input lists match
-        if len(self.graph.nodes) != len(vertex_ids):
-            raise InputLengthDoesNotMatchError("Length of vertex IDs does not match number of vertices.")
-        
         # Initialize a NetworkX graph
         self.graph = nx.Graph()
 
@@ -100,6 +92,15 @@ class GraphProcessor:
         for edge_pair, enabled, edge_ids in zip(edge_vertex_id_pairs, edge_enabled, edge_ids):
             if enabled:
                 self.graph.add_edge(*edge_pair, id=edge_ids)
+
+        # 5. Check if source vertex exists in the graph
+        if source_vertex_id not in self.graph.nodes:
+            raise IDNotFoundError("Source vertex ID not found.")
+        
+        # 4. Check if lengths of input lists match
+        if len(self.graph.nodes) != len(vertex_ids):
+            raise InputLengthDoesNotMatchError("Length of vertex IDs does not match number of vertices.")
+        
 
     def find_downstream_vertices(self, edge_id: int) -> List[int]:
         """
@@ -166,10 +167,10 @@ class GraphProcessor:
         # put your implementation here
         pass
 
-#Testing
+#Testing same graph as above, but the disabled are not drawn
 vertex_ids = [0, 2, 4, 6, 10]
 edge_ids = [1, 3, 5, 7, 8, 9]
-edge_vertex_id_pairs = [(0, 2), (2, 4), (4, 6), (0, 4), (2, 6), (6, 10)]
+edge_vertex_id_pairs = [(0, 2), (0,4), (0, 6), (2, 4), (4, 6), (2, 10)]
 edge_enabled = [True, True, True, False, False, True]
 source_vertex_id = 10
 
