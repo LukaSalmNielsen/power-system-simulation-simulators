@@ -11,17 +11,20 @@ Date: 30/04/2024
 """
 
 from typing import List, Tuple
-import networkx as nx
+
 import matplotlib.pyplot as plt
+import networkx as nx
 
 
 class IDNotFoundError(Exception):
     """Exception raised when source_vertex_id is not a valid vertex id"""
+
     pass
 
 
 class InputLengthDoesNotMatchError(Exception):
     """Exception raised when the length of the edge_enabled does not match the input lists edge_ids."""
+
     pass
 
 
@@ -81,7 +84,7 @@ class GraphProcessor:
             6. The graph should be fully connected. (GraphNotFullyConnectedError)
             7. The graph should not contain cycles. (GraphCycleError)
         """
-        
+
         # 4. Check if lengths of input lists match
         if len(edge_enabled) != len(edge_ids):
             raise InputLengthDoesNotMatchError("Length of vertex IDs does not match number of vertices.")
@@ -100,7 +103,6 @@ class GraphProcessor:
         for edge_pair, enabled, edge_ids in zip(edge_vertex_id_pairs, edge_enabled, edge_ids):
             if enabled:
                 self.graph.add_edge(*edge_pair, id=edge_ids)
-        
 
     def find_downstream_vertices(self, edge_id: int) -> List[int]:
         """
@@ -167,10 +169,11 @@ class GraphProcessor:
         # put your implementation here
         pass
 
-#Testing same graph as above, but the disabled are not drawn
+
+# Testing same graph as above, but the disabled are not drawn
 vertex_ids = [0, 2, 4, 6, 10]
 edge_ids = [1, 3, 5, 7, 8, 9]
-edge_vertex_id_pairs = [(0, 2), (0,4), (0, 6), (2, 4), (4, 6), (2, 10)]
+edge_vertex_id_pairs = [(0, 2), (0, 4), (0, 6), (2, 4), (4, 6), (2, 10)]
 edge_enabled = [True, True, True, False, False, True]
 source_vertex_id = 10
 # source_vertex_id = 9 #to raise 5. IDNotFoundError
