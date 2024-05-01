@@ -33,10 +33,16 @@ class IDNotUniqueError(Exception):
 
 
 class GraphNotFullyConnectedError(Exception):
+    """Exception raised when the graph is not fully connected meaning there are floating vertices."""
+
+
     pass
 
 
 class GraphCycleError(Exception):
+    """Exception raised when the graph contains cycles."""
+
+
     pass
 
 
@@ -103,6 +109,22 @@ class GraphProcessor:
         for edge_pair, enabled, edge_ids in zip(edge_vertex_id_pairs, edge_enabled, edge_ids):
             if enabled:
                 self.graph.add_edge(*edge_pair, id=edge_ids)
+
+        # 6. The graph should be fully connected. (GraphNotFullyConnectedError) (with nx)
+        # tests the below code by adding a disconnected node
+        # self.graph.add_node(5) (uncomment to test)
+        if not nx.is_connected(self.graph):
+            raise GraphNotFullyConnectedError("Graph not fully connected")
+        
+
+        # 7. The graph should not contain cycles. (GraphCycleError)
+        #self.graph.add_edge(2, 6) #(uncomment to test)
+        try:
+            nx.find_cycle(self.graph)
+            print("A cycle was found.")
+            raise GraphCycleError("The graph contains cycles.")
+        except nx.NetworkXNoCycle:
+            pass       
 
     def find_downstream_vertices(self, edge_id: int) -> List[int]:
         """
