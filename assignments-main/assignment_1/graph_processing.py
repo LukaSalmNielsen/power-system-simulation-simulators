@@ -5,8 +5,8 @@ This script defines a GraphProcessor class for processing undirected graphs.
 It provides functionality to initialize a graph, find downstream vertices of an edge, 
 and identify alternative edges for ensuring graph connectivity.
 
-Authors: Rick Eversdijk, ...
-Date: 30/04/2024
+Authors: Rick Eversdijk, Luka Nielsen
+Date: 02/05/2024
 
 """
 
@@ -19,13 +19,9 @@ import networkx as nx
 class IDNotFoundError(Exception):
     """Exception raised when source_vertex_id is not a valid vertex id"""
 
-    pass
-
 
 class InputLengthDoesNotMatchError(Exception):
     """Exception raised when the length of the edge_enabled does not match the input lists edge_ids."""
-
-    pass
 
 
 class IDNotUniqueError(Exception):
@@ -35,13 +31,9 @@ class IDNotUniqueError(Exception):
 class GraphNotFullyConnectedError(Exception):
     """Exception raised when the graph is not fully connected meaning there are floating vertices."""
 
-    pass
-
 
 class GraphCycleError(Exception):
     """Exception raised when the graph contains cycles."""
-
-    pass
 
 
 class EdgeAlreadyDisabledError(Exception):
@@ -151,7 +143,6 @@ class GraphProcessor:
             A list of all downstream vertices.
         """
         # put your implementation here
-        pass
 
     def find_alternative_edges(self, disabled_edge_id: int) -> List[int]:
         """
@@ -189,7 +180,6 @@ class GraphProcessor:
             A list of alternative edge ids.
         """
         # put your implementation here
-        pass
 
 
 # Testing same graph as above, but the disabled are not drawn
@@ -212,11 +202,11 @@ plt.title("Graph Visualization")
 plt.show()
 grid.graph.nodes.data()
 
-downstream_vertices = grid.find_downstream_vertices(1)
-print("Downstream vertices of edge 1:", downstream_vertices)
+# downstream_vertices = grid.find_downstream_vertices(1)
+# print("Downstream vertices of edge 1:", downstream_vertices)
 
-alternative_edges = grid.find_alternative_edges(1)
-print("Alternative edges for disabling edge 1:", alternative_edges)
+# alternative_edges = grid.find_alternative_edges(1)
+# print("Alternative edges for disabling edge 1:", alternative_edges)
 
 nodes = grid.graph.nodes(data=True)
 print("Nodes:", nodes)
