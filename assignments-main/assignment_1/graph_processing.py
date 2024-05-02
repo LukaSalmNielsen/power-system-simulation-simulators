@@ -122,7 +122,6 @@ class GraphProcessor:
         # self.graph.add_edge(2, 6) #(uncomment to test)
         try:
             nx.find_cycle(self.graph)
-            print("A cycle was found.")
             raise GraphCycleError("The graph contains cycles.")
         except nx.NetworkXNoCycle:
             pass
