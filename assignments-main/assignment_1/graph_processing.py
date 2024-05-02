@@ -35,13 +35,11 @@ class IDNotUniqueError(Exception):
 class GraphNotFullyConnectedError(Exception):
     """Exception raised when the graph is not fully connected meaning there are floating vertices."""
 
-
     pass
 
 
 class GraphCycleError(Exception):
     """Exception raised when the graph contains cycles."""
-
 
     pass
 
@@ -93,7 +91,9 @@ class GraphProcessor:
 
         # 4. Check if lengths of input lists match
         if len(edge_enabled) != len(edge_ids):
-            raise InputLengthDoesNotMatchError("Length of vertex IDs does not match number of vertices.")
+            raise InputLengthDoesNotMatchError(
+                "Length of vertex IDs does not match number of vertices."
+            )
 
         # 5. Check if source vertex exists in the graph
         if source_vertex_id not in vertex_ids:
@@ -106,7 +106,9 @@ class GraphProcessor:
         self.graph.add_nodes_from(vertex_ids)
 
         # Add edges to the graph
-        for edge_pair, enabled, edge_ids in zip(edge_vertex_id_pairs, edge_enabled, edge_ids):
+        for edge_pair, enabled, edge_ids in zip(
+            edge_vertex_id_pairs, edge_enabled, edge_ids
+        ):
             if enabled:
                 self.graph.add_edge(*edge_pair, id=edge_ids)
 
@@ -115,16 +117,15 @@ class GraphProcessor:
         # self.graph.add_node(5) (uncomment to test)
         if not nx.is_connected(self.graph):
             raise GraphNotFullyConnectedError("Graph not fully connected")
-        
 
         # 7. The graph should not contain cycles. (GraphCycleError)
-        #self.graph.add_edge(2, 6) #(uncomment to test)
+        # self.graph.add_edge(2, 6) #(uncomment to test)
         try:
             nx.find_cycle(self.graph)
             print("A cycle was found.")
             raise GraphCycleError("The graph contains cycles.")
         except nx.NetworkXNoCycle:
-            pass       
+            pass
 
     def find_downstream_vertices(self, edge_id: int) -> List[int]:
         """
@@ -201,7 +202,9 @@ source_vertex_id = 10
 # source_vertex_id = 9 #to raise 5. IDNotFoundError
 # edge_ids = [1, 3, 5, 7, 8] #to raise 4. InputLengthDoesNotMatchError
 
-grid = GraphProcessor(vertex_ids, edge_ids, edge_vertex_id_pairs, edge_enabled, source_vertex_id)
+grid = GraphProcessor(
+    vertex_ids, edge_ids, edge_vertex_id_pairs, edge_enabled, source_vertex_id
+)
 
 plt.figure(figsize=(8, 6))
 pos = nx.spring_layout(grid.graph)  # Position nodes using the spring layout algorithm
