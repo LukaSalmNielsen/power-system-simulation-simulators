@@ -30,6 +30,7 @@ class InputLengthDoesNotMatchError(Exception):
 
 class IDNotUniqueError(Exception):
     """1. Exception raised when there is duplicate vertex or edge id"""
+
     pass
 
 
@@ -87,13 +88,13 @@ class GraphProcessor:
         """
         # 1. check for redundant vertex or edge ids
         seen_vertex = set()
-        for id in vertex_ids: 
+        for id in vertex_ids:
             if id in seen_vertex:
                 raise IDNotUniqueError("vertex and edge ids are not unique.")
             seen_vertex.add(id)
 
         seen_edge = set()
-        for id in edge_ids: 
+        for id in edge_ids:
             if id in seen_edge:
                 raise IDNotUniqueError("vertex and edge ids are not unique.")
             seen_edge.add(id)
