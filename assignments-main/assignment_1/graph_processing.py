@@ -117,6 +117,20 @@ class GraphProcessor:
         if source_vertex_id not in vertex_ids:
             raise IDNotFoundError("Source vertex ID not found.")
 
+        # 6. The graph should be fully connected. (GraphNotFullyConnectedError) (with nx)
+        # tests the below code by adding a disconnected node
+        # self.graph.add_node(5) (uncomment to test)
+        if not nx.is_connected(self.graph):
+            raise GraphNotFullyConnectedError("Graph not fully connected")
+
+        # 7. The graph should not contain cycles. (GraphCycleError)
+        # self.graph.add_edge(2, 6) #(uncomment to test)
+        try:
+            nx.find_cycle(self.graph)
+            raise GraphCycleError("The graph contains cycles.")
+        except nx.NetworkXNoCycle:
+            pass
+
         # Initialize a NetworkX graph
         self.graph = nx.Graph()
 
