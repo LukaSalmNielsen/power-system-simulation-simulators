@@ -224,36 +224,5 @@ class GraphProcessor:
         print(alt_list)
     pass
 
-##########################################################################################
-##########################################################################################
-# Testing same graph as above, but the disabled are not drawn
-vertex_ids = [0, 2, 4, 6, 10]
-edge_ids = [1, 3, 5, 7, 8, 9]
-edge_vertex_id_pairs = [(0, 2), (0, 4), (0, 6), (2, 4), (4, 6), (2, 10)]
-edge_enabled = [True, True, True, False, False, True]
-source_vertex_id = 10
-#call GraphProcessor class to initialize the graph
-grid = GraphProcessor(vertex_ids, edge_ids, edge_vertex_id_pairs, edge_enabled, source_vertex_id)
-
-plt.figure(figsize=(8, 6))
-pos = nx.spring_layout(grid.graph)  # Position nodes using the spring layout algorithm
-nx.draw(grid.graph, pos, with_labels=True)
-plt.title("Graph Visualization")
-plt.show()
-grid.graph.nodes.data()
-
-#graph.find_downstream_vertices accesses the method inside the object defined with GraphProcessor class
-downstream_vertices = grid.find_downstream_vertices(1)
-print("Downstream vertices of edge 1:", downstream_vertices)
-
-alternative_edges = grid.find_alternative_edges(1)
-print("Alternative edges for disabling edge 1:", alternative_edges)
-
-nodes = grid.graph.nodes(data=True)
-print("Nodes:", nodes)
-
-edges = grid.graph.edges(data=True)
-print("Edges:", edges)
-
 
 
