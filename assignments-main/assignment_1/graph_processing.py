@@ -23,12 +23,14 @@ class IDNotFoundError(Exception):
 
 
 class InputLengthDoesNotMatchError(Exception):
-    """Exception raised when the length of the edge_enabled does not match the input lists edge_ids."""
+    """2. Exception raised when the length of the edge_enabled does not match the input lists edge_ids."""
 
     pass
 
 
 class IDNotUniqueError(Exception):
+    """1. Exception raised when there is duplicate vertex or edge id"""
+
     pass
 
 
@@ -84,14 +86,50 @@ class GraphProcessor:
             6. The graph should be fully connected. (GraphNotFullyConnectedError)
             7. The graph should not contain cycles. (GraphCycleError)
         """
+        # 1. check for redundant vertex or edge ids
+        seen_vertex = set()
+        for id in vertex_ids:
+            if id in seen_vertex:
+                raise IDNotUniqueError("vertex and edge ids are not unique.")
+            seen_vertex.add(id)
+
+        seen_edge = set()
+        for id in edge_ids:
+            if id in seen_edge:
+                raise IDNotUniqueError("vertex and edge ids are not unique.")
+            seen_edge.add(id)
+
+        # 2. check if length of edge_vertex_id_pairs is equal to length of edge_ids
+        if len(edge_vertex_id_pairs) != len(edge_ids):
+            raise InputLengthDoesNotMatchError("The amount of vertex pairs is not equal to the amount of edges.")
+
+        # 3. check if edge_vertex_id_pairs contain existing vertex ids
+        for pair in edge_vertex_id_pairs:
+            for vertex_id in pair:
+                if vertex_id not in vertex_ids:
+                    raise IDNotFoundError("Vertex ID present in edge_vertex_id_pairs does not exist.")
 
         # 4. Check if lengths of input lists match
         if len(edge_enabled) != len(edge_ids):
-            raise InputLengthDoesNotMatchError("Length of vertex IDs does not match number of vertices.")
+            raise InputLengthDoesNotMatchError("Length of edge IDs does not match number initialized edges.")
 
         # 5. Check if source vertex exists in the graph
         if source_vertex_id not in vertex_ids:
             raise IDNotFoundError("Source vertex ID not found.")
+
+        # 6. The graph should be fully connected. (GraphNotFullyConnectedError) (with nx)
+        # tests the below code by adding a disconnected node
+        # self.graph.add_node(5) (uncomment to test)
+        if not nx.is_connected(self.graph):
+            raise GraphNotFullyConnectedError("Graph not fully connected")
+
+        # 7. The graph should not contain cycles. (GraphCycleError)
+        # self.graph.add_edge(2, 6) #(uncomment to test)
+        try:
+            nx.find_cycle(self.graph)
+            raise GraphCycleError("The graph contains cycles.")
+        except nx.NetworkXNoCycle:
+            pass
 
         # Initialize a NetworkX graph
         self.graph = nx.Graph()
@@ -177,7 +215,10 @@ edge_vertex_id_pairs = [(0, 2), (0, 4), (0, 6), (2, 4), (4, 6), (2, 10)]
 edge_enabled = [True, True, True, False, False, True]
 source_vertex_id = 10
 # source_vertex_id = 9 #to raise 5. IDNotFoundError
-# edge_ids = [1, 3, 5, 7, 8] #to raise 4. InputLengthDoesNotMatchError
+# edge_ids = [1, 3, 5, 7, 8] #to raise 4 and 2. InputLengthDoesNotMatchError
+# edge_vertex_id_pairs = [(0, 2), (0, 5), (0, 6), (2, 4), (4, 6), (2, 10)] #raise 3. IDNotFoundError
+# vertex_ids = [0, 2, 4, 4, 6, 10] #to raise 1. IDNotUniqueError
+# edge_ids = [1, 3, 3, 7, 8, 9] #to raise 1. IDNotUniqueError
 
 grid = GraphProcessor(vertex_ids, edge_ids, edge_vertex_id_pairs, edge_enabled, source_vertex_id)
 
