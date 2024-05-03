@@ -116,7 +116,7 @@ class GraphProcessor:
         # 5. Check if source vertex exists in the graph
         if source_vertex_id not in vertex_ids:
             raise IDNotFoundError("Source vertex ID not found.")
-        
+
         # Initialize a NetworkX graph
         self.graph = nx.Graph()
 
@@ -141,8 +141,6 @@ class GraphProcessor:
             raise GraphCycleError("The graph contains cycles.")
         except nx.NetworkXNoCycle:
             pass
-
-        
 
     def find_downstream_vertices(self, edge_id: int) -> List[int]:
         """
