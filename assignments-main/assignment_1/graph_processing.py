@@ -116,6 +116,17 @@ class GraphProcessor:
         # 5. Check if source vertex exists in the graph
         if source_vertex_id not in vertex_ids:
             raise IDNotFoundError("Source vertex ID not found.")
+        
+        # Initialize a NetworkX graph
+        self.graph = nx.Graph()
+
+        # Add nodes/vertexes to the graph
+        self.graph.add_nodes_from(vertex_ids)
+
+        # Add edges to the graph
+        for edge_pair, enabled, edge_ids in zip(edge_vertex_id_pairs, edge_enabled, edge_ids):
+            if enabled:
+                self.graph.add_edge(*edge_pair, id=edge_ids)
 
         # 6. The graph should be fully connected. (GraphNotFullyConnectedError) (with nx)
         # tests the below code by adding a disconnected node
@@ -131,16 +142,7 @@ class GraphProcessor:
         except nx.NetworkXNoCycle:
             pass
 
-        # Initialize a NetworkX graph
-        self.graph = nx.Graph()
-
-        # Add nodes/vertexes to the graph
-        self.graph.add_nodes_from(vertex_ids)
-
-        # Add edges to the graph
-        for edge_pair, enabled, edge_ids in zip(edge_vertex_id_pairs, edge_enabled, edge_ids):
-            if enabled:
-                self.graph.add_edge(*edge_pair, id=edge_ids)
+        
 
     def find_downstream_vertices(self, edge_id: int) -> List[int]:
         """
