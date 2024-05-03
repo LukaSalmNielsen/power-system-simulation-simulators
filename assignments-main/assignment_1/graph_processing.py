@@ -9,16 +9,15 @@ Authors: Rick Eversdijk, ...
 Date: 30/04/2024
 
 """
-import networkx as nx
-import matplotlib.pyplot as plt
-import pandas as pd
-import numpy as np
-import copy
+
 import contextlib
+import copy
 from typing import List, Tuple
 
 import matplotlib.pyplot as plt
 import networkx as nx
+import numpy as np
+import pandas as pd
 
 
 class IDNotFoundError(Exception):
@@ -128,6 +127,17 @@ class GraphProcessor:
         if source_vertex_id not in vertex_ids:
             raise IDNotFoundError("Source vertex ID not found.")
 
+        # Initialize a NetworkX graph
+        self.graph = nx.Graph()
+
+        # Add nodes/vertexes to the graph
+        self.graph.add_nodes_from(vertex_ids)
+
+        # Add edges to the graph
+        for edge_pair, enabled, edge_ids in zip(edge_vertex_id_pairs, edge_enabled, edge_ids):
+            if enabled:
+                self.graph.add_edge(*edge_pair, id=edge_ids)
+
         # 6. The graph should be fully connected. (GraphNotFullyConnectedError) (with nx)
         # tests the below code by adding a disconnected node
         # self.graph.add_node(5) (uncomment to test)
@@ -141,17 +151,6 @@ class GraphProcessor:
             raise GraphCycleError("The graph contains cycles.")
         except nx.NetworkXNoCycle:
             pass
-
-        # Initialize a NetworkX graph
-        self.graph = nx.Graph()
-
-        # Add nodes/vertexes to the graph
-        self.graph.add_nodes_from(vertex_ids)
-
-        # Add edges to the graph
-        for edge_pair, enabled, edge_ids in zip(edge_vertex_id_pairs, edge_enabled, edge_ids):
-            if enabled:
-                self.graph.add_edge(*edge_pair, id=edge_ids)
 
     def find_downstream_vertices(self, edge_id: int) -> List[int]:
         """
@@ -179,7 +178,7 @@ class GraphProcessor:
         """
         # put your implementation here
         pass
-    
+
     def find_alternative_edges(self, disabled_edge_id: int) -> List[int]:
         """
         Given an enabled edge, do the following analysis:
@@ -216,54 +215,58 @@ class GraphProcessor:
             A list of alternative edge ids.
         """
 
-############################################################
-        'Done by Carmelo Vella, 02/05/2024'
+        ############################################################
+        "Done by Carmelo Vella, 02/05/2024"
 
-        #Explanaition:
-        #1. errors are checked and empty output list is initialised
-        #2. a list of ORIGINALLY disabled edges is created
-        #3. a list of UPDATED disabled edges is made with disabled_edge_id considered
-        
-        #4. a list of edges is created: the list(zip()) functions pair each edge_id with
+        # Explanaition:
+        # 1. errors are checked and empty output list is initialised
+        # 2. a list of ORIGINALLY disabled edges is created
+        # 3. a list of UPDATED disabled edges is made with disabled_edge_id considered
+
+        # 4. a list of edges is created: the list(zip()) functions pair each edge_id with
         # the corresponding vertex pair and status-enables/disabled
-        #5. a new list is made where disabled_edge_id considered (it becomes disabled)
-        #6. the ORIGINALLY disabled edges are taken one by one (while loop). For each
+        # 5. a new list is made where disabled_edge_id considered (it becomes disabled)
+        # 6. the ORIGINALLY disabled edges are taken one by one (while loop). For each
         # iteration, the edge is now ENABLED "temporarily" and a new graph is made. This graph
         # is then checked for cyclicity and completeness. If satisfactory, the ORIGINALLY disabled
-        #index is added to the output list alt_list[]
-        #7. after iterations end, the output list is printed
+        # index is added to the output list alt_list[]
+        # 7. after iterations end, the output list is printed
 
-        #1. check errors & output list (i.e. the alternate edges that will be enabled)
-        '''if disabled_edge_id not in edge_ids:
+        # 1. check errors & output list (i.e. the alternate edges that will be enabled)
+        """if disabled_edge_id not in edge_ids:
             raise IDNotFoundError
         if disabled_edge_id not in edge_enabled and disabled_edge_id in edge_ids:
-            raise EdgeAlreadyDisabledError'''
-        
+            raise EdgeAlreadyDisabledError"""
+
         alt_list = []
 
-        #2. create a list of currently disabled edge IDs
-        disabled_edges = [edge_ids[i] for i in range(len(edge_ids)) if not edge_enabled[i]]  
-        
-        #3. create copy of list and update list
+        # 2. create a list of currently disabled edge IDs
+        disabled_edges = [edge_ids[i] for i in range(len(edge_ids)) if not edge_enabled[i]]
+
+        # 3. create copy of list and update list
         disabled_edges_new = copy.copy(disabled_edges)
         disabled_edges_new.append(disabled_edge_id)
 
-        #4. create list of all edges with vertex pairs, enabling and ID (vertex_pair,(dis)/(en)abled,id)
+        # 4. create list of all edges with vertex pairs, enabling and ID (vertex_pair,(dis)/(en)abled,id)
         full_edge_list = list(zip(edge_vertex_id_pairs, edge_enabled, edge_ids))
-        print(full_edge)
-        #5. the edge with id = disabled_edge_id is disabled and list is updated
-        new_full_edge_list = [(vertex_pair, False if edge_id == disabled_edge_id else enabled, edge_id) for vertex_pair, enabled, edge_id in full_edge_list]
-        
-        
-        #6. the originally disabled edges are iterated through and enabled in sequence 
+        # 5. the edge with id = disabled_edge_id is disabled and list is updated
+        new_full_edge_list = [
+            (vertex_pair, False if edge_id == disabled_edge_id else enabled, edge_id)
+            for vertex_pair, enabled, edge_id in full_edge_list
+        ]
+
+        # 6. the originally disabled edges are iterated through and enabled in sequence
         # iterate disabled_edges:
         i = 0
         while i < len(disabled_edges):
 
-            # for each originally disabled edge, a new graph is created in which a new list of edges is 
+            # for each originally disabled edge, a new graph is created in which a new list of edges is
             # created (i.e. said edge is now enabled)
-            temp_full_edge_list = [(vertex_pair, True if edge_id == disabled_edges[i] else enabled, edge_id) for vertex_pair, enabled, edge_id in new_full_edge_list]
-            
+            temp_full_edge_list = [
+                (vertex_pair, True if edge_id == disabled_edges[i] else enabled, edge_id)
+                for vertex_pair, enabled, edge_id in new_full_edge_list
+            ]
+
             # new graph is made // all vertices are added // edges are added from previously updated edge list
             new_graph = nx.Graph()
             new_graph.add_nodes_from(vertex_ids)
@@ -273,24 +276,23 @@ class GraphProcessor:
                     new_graph.add_edge(*vertex_pair, id=edge_ids)
                 pass
             nx.draw(new_graph)
-            
+
             try:
                 nr_cycles = nx.find_cycle(new_graph)
                 connected = nx.is_connected(new_graph)
             except:
                 nr_cycles = 0
                 connected = nx.is_connected(new_graph)
-            
+
             if nr_cycles == 0 and connected == True:
                 alt_list.append(disabled_edges[i])
             i += 1
-        #7. print output
+        # 7. print output
         print(alt_list)
+
     pass
 
-
-        # put your implementation here
-        pass
+    # put your implementation here
 
 
 # Testing same graph as above, but the disabled are not drawn
@@ -325,4 +327,3 @@ print("Nodes:", nodes)
 
 edges = grid.graph.edges(data=True)
 print("Edges:", edges)
-
