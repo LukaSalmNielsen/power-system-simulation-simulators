@@ -23,6 +23,8 @@ import pandas as pd
 class IDNotFoundError(Exception):
     """Exception raised when source_vertex_id is not a valid vertex id"""
 
+    pass
+
 
 class InputLengthDoesNotMatchError(Exception):
     """2. Exception raised when the length of the edge_enabled does not match the input lists edge_ids."""
@@ -137,13 +139,10 @@ class GraphProcessor:
                 self.graph.add_edge(*edge_pair, id=edge_ids)
 
         # 6. The graph should be fully connected. (GraphNotFullyConnectedError) (with nx)
-        # tests the below code by adding a disconnected node
-        # self.graph.add_node(5) (uncomment to test)
         if not nx.is_connected(self.graph):
             raise GraphNotFullyConnectedError("Graph not fully connected")
 
         # 7. The graph should not contain cycles. (GraphCycleError)
-        # self.graph.add_edge(2, 6) #(uncomment to test)
         try:
             nx.find_cycle(self.graph)
             raise GraphCycleError("The graph contains cycles.")
@@ -174,7 +173,6 @@ class GraphProcessor:
         Returns:
             A list of all downstream vertices.
         """
-        # put your implementation here
         pass
 
     def find_alternative_edges(self, disabled_edge_id: int) -> List[int]:
@@ -291,37 +289,3 @@ class GraphProcessor:
     pass
 
     # put your implementation here
-
-
-# Testing same graph as above, but the disabled are not drawn
-vertex_ids = [0, 2, 4, 6, 10]
-edge_ids = [1, 3, 5, 7, 8, 9]
-edge_vertex_id_pairs = [(0, 2), (0, 4), (0, 6), (2, 4), (4, 6), (2, 10)]
-edge_enabled = [True, True, True, False, False, True]
-source_vertex_id = 10
-# source_vertex_id = 9 #to raise 5. IDNotFoundError
-# edge_ids = [1, 3, 5, 7, 8] #to raise 4 and 2. InputLengthDoesNotMatchError
-# edge_vertex_id_pairs = [(0, 2), (0, 5), (0, 6), (2, 4), (4, 6), (2, 10)] #raise 3. IDNotFoundError
-# vertex_ids = [0, 2, 4, 4, 6, 10] #to raise 1. IDNotUniqueError
-# edge_ids = [1, 3, 3, 7, 8, 9] #to raise 1. IDNotUniqueError
-
-grid = GraphProcessor(vertex_ids, edge_ids, edge_vertex_id_pairs, edge_enabled, source_vertex_id)
-
-plt.figure(figsize=(8, 6))
-pos = nx.spring_layout(grid.graph)  # Position nodes using the spring layout algorithm
-nx.draw(grid.graph, pos, with_labels=True)
-plt.title("Graph Visualization")
-plt.show()
-grid.graph.nodes.data()
-
-downstream_vertices = grid.find_downstream_vertices(1)
-print("Downstream vertices of edge 1:", downstream_vertices)
-
-alternative_edges = grid.find_alternative_edges(1)
-print("Alternative edges for disabling edge 1:", alternative_edges)
-
-nodes = grid.graph.nodes(data=True)
-print("Nodes:", nodes)
-
-edges = grid.graph.edges(data=True)
-print("Edges:", edges)

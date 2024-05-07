@@ -14,7 +14,11 @@ classifiers = [
 ]
 requires-python = ">=3.12"
 # add dependencies of your core package, check the license first!
-dependencies = []
+dependencies = [
+  'networkx',
+  'typing',
+  'contextlib'
+  ]
 version = "0.1"
 
 [project.optional-dependencies]
@@ -28,7 +32,9 @@ dev = [
 
 # add more dependencies for running the examples
 example = [
-  'jupyter'
+  'jupyter',
+  'matplotlib.pyplot'
+
 ]
 
 [tool.setuptools.packages.find]
@@ -51,6 +57,7 @@ line_length = 120
 [tool.pylint.main]
 # Specify a score threshold under which the program will exit with error.
 fail-under = 10
+max-line-length=120
 
 # Minimum Python version to use for version dependent checks. Will default to the
 # version used to run pylint.
