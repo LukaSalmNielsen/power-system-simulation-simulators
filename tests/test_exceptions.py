@@ -4,7 +4,7 @@ from power_system_simulation.graph_processing import (
     GraphProcessor,
     IDNotFoundError,
     IDNotUniqueError,
-    InputLengthDoesNotMatchError
+    InputLengthDoesNotMatchError,
 )
 
 vertex_ids = [0, 2, 4, 6, 10]

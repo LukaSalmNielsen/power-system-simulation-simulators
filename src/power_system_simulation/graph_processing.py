@@ -17,7 +17,8 @@ from typing import List, Tuple
 import matplotlib.pyplot as plt
 import networkx as nx
 import numpy as np
-import pandas as pd
+
+# import pandas as pd
 
 
 class IDNotFoundError(Exception):
