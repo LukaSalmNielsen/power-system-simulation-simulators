@@ -286,7 +286,7 @@ class GraphProcessor:
                 alt_list.append(disabled_edges[i])
             i += 1
         # 7. print output
-        return(alt_list)
+        return alt_list
 
     pass
 
