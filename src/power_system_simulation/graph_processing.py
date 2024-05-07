@@ -18,8 +18,6 @@ import matplotlib.pyplot as plt
 import networkx as nx
 import numpy as np
 
-# import pandas as pd
-
 
 class IDNotFoundError(Exception):
     """Exception raised when source_vertex_id is not a valid vertex id"""
