@@ -32,7 +32,7 @@ dev = [
 # add more dependencies for running the examples
 example = [
   'jupyter',
-  'matplotlib.pyplot'
+  'matplotlib'
 
 ]
 
