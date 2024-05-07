@@ -23,8 +23,6 @@ import pandas as pd
 class IDNotFoundError(Exception):
     """Exception raised when source_vertex_id is not a valid vertex id"""
 
-    pass
-
 
 class InputLengthDoesNotMatchError(Exception):
     """2. Exception raised when the length of the edge_enabled does not match the input lists edge_ids."""
