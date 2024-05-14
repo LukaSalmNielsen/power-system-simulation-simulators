@@ -1,6 +1,7 @@
 import pytest
 
 from power_system_simulation.graph_processing import (
+    EdgeAlreadyDisabledError,
     GraphCycleError,
     GraphNotFullyConnectedError,
     GraphProcessor,
@@ -37,4 +38,10 @@ def test_GraphNotFullyConnectedError():
 def test_GraphCycleError():
     with pytest.raises(GraphCycleError):
         edge_enabled = [True, True, True, False, True, True]
+        grid = GraphProcessor(vertex_ids, edge_ids, edge_vertex_id_pairs, edge_enabled, source_vertex_id)
+
+
+def test_IDNotUniqueError():
+    with pytest.raises(IDNotUniqueError):
+        vertex_ids = [0, 2, 2, 6, 10]  # double vertex id of 2
         grid = GraphProcessor(vertex_ids, edge_ids, edge_vertex_id_pairs, edge_enabled, source_vertex_id)
