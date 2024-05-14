@@ -1,6 +1,8 @@
 import pytest
 
 from power_system_simulation.graph_processing import (
+    GraphCycleError,
+    GraphNotFullyConnectedError,
     GraphProcessor,
     IDNotFoundError,
     IDNotUniqueError,
@@ -23,4 +25,16 @@ def test_IDNotFoundError():
 def test_InputLengthDoesNotMatchError():
     with pytest.raises(InputLengthDoesNotMatchError):
         edge_ids = [1, 3, 5, 7, 8]
+        grid = GraphProcessor(vertex_ids, edge_ids, edge_vertex_id_pairs, edge_enabled, source_vertex_id)
+
+
+def test_GraphNotFullyConnectedError():
+    with pytest.raises(GraphNotFullyConnectedError):
+        vertex_ids = [0, 2, 4, 6, 10, 5]
+        grid = GraphProcessor(vertex_ids, edge_ids, edge_vertex_id_pairs, edge_enabled, source_vertex_id)
+
+
+def test_GraphCycleError():
+    with pytest.raises(GraphCycleError):
+        edge_enabled = [True, True, True, False, True, True]
         grid = GraphProcessor(vertex_ids, edge_ids, edge_vertex_id_pairs, edge_enabled, source_vertex_id)
