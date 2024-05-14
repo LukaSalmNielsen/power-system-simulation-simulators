@@ -141,6 +141,11 @@ class GraphProcessor:
         # index is added to the output list alt_list[]
         # 7. after iterations end, the output list is printed
 
+        # 1. check if edge is not already disabled
+        if disabled_edge_id not in self.edge_ids:
+            raise IDNotFoundError
+        if disabled_edge_id not in self.edge_enabled and disabled_edge_id in self.edge_ids:
+            raise EdgeAlreadyDisabledError
         alt_list = []
 
         # 2. create a list of currently disabled edge IDs

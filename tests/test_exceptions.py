@@ -45,3 +45,9 @@ def test_IDNotUniqueError():
     with pytest.raises(IDNotUniqueError):
         vertex_ids = [0, 2, 2, 6, 10]  # double vertex id of 2
         grid = GraphProcessor(vertex_ids, edge_ids, edge_vertex_id_pairs, edge_enabled, source_vertex_id)
+
+
+def test_EdgeAlreadyDisabledError():
+    with pytest.raises(EdgeAlreadyDisabledError):
+        grid = GraphProcessor(vertex_ids, edge_ids, edge_vertex_id_pairs, edge_enabled, source_vertex_id)
+        grid.find_alternative_edges(7)
