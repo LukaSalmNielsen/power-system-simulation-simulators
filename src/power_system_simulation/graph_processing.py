@@ -121,6 +121,7 @@ class GraphProcessor:
 
     def find_downstream_vertices(self, edge_id: int) -> List[int]:
         """Find downstream vertices"""
+
     def find_alternative_edges(self, disabled_edge_id: int) -> List[int]:
 
         ############################################################
