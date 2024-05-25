@@ -20,7 +20,9 @@ dependencies = [
   'pandas',
   'power_grid_model',
   'numpy',
-  'typing'
+  'typing',
+  'pyarrow', 
+  'fastparquet'
   ]
 version = "0.1"
 
