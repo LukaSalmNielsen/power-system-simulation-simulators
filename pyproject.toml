@@ -17,6 +17,10 @@ requires-python = ">=3.12"
 dependencies = [
   'networkx',
   'typing',
+  'pandas',
+  'power_grid_model',
+  'numpy',
+  'typing'
   ]
 version = "0.1"
 
