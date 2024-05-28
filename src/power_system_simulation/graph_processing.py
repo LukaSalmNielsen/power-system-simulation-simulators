@@ -174,7 +174,7 @@ class GraphProcessor:
             raise IDNotFoundError
         if disabled_edge_id in disabled_edges:
             raise EdgeAlreadyDisabledError
-        
+
         alt_list = []
 
         # 3. create copy of list and update list
@@ -221,6 +221,6 @@ class GraphProcessor:
                 alt_list.append(disabled_edges[i])
 
             i += 1
-            
+
         # 7. print output
         return alt_list
