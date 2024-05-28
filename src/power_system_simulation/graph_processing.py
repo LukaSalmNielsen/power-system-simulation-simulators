@@ -1,11 +1,11 @@
 """
-Graph Processing Assignment
+Graph Processing Module
 
 This script defines a GraphProcessor class for processing undirected graphs. 
 It provides functionality to initialize a graph, find downstream vertices of an edge, 
 and identify alternative edges for ensuring graph connectivity.
 
-Authors: Rick Eversdijk, ...
+Authors: Rick Eversdijk, Luka Nielsen, Carmelo Vella, David van Warmerdam, Codrin Dănculea
 Date: 30/04/2024
 
 """
