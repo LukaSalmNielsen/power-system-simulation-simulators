@@ -119,8 +119,34 @@ class GraphProcessor:
         except nx.NetworkXNoCycle:
             pass
 
-    def find_downstream_vertices(self, edge_id: int) -> List[int]:
-        """Find downstream vertices"""
+    def find_downstream_vertices(self, starting_edge_id: int) -> List[int]:
+        # Verify that the edge ID exists
+        if starting_edge_id not in self.edge_ids:
+            raise IDNotFoundError("The edge ID provided does not exist.")
+
+        # Check if the edge is already disabled, which would be incorrect for this operation
+        index = self.edge_ids.index(starting_edge_id)
+        if not self.edge_enabled[index]:
+            return []
+        # Get the vertices of the edge
+        u, v = self.edge_vertex_id_pairs[index]
+    
+        # Simulate the edge being disabled by temporarily removing it
+        self.graph.remove_edge(u, v)
+    
+        # Find all connected components after the removal
+        components = list(nx.connected_components(self.graph))
+    
+        # Restore the edge to maintain original graph state
+        self.graph.add_edge(u, v)
+
+        # Determine which component contains the source vertex
+        source_component = next(comp for comp in components if self.source_vertex_id in comp)
+    
+        # Return the nodes in the component that does not contain the source vertex
+        for comp in components:
+            if comp != source_component:
+                return list(comp)
 
     def find_alternative_edges(self, disabled_edge_id: int) -> List[int]:
 
