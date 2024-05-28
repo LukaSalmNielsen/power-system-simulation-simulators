@@ -128,8 +128,8 @@ class GraphProcessor:
         "Done by Carmelo Vella, 02/05/2024"
 
         # Explanaition:
-        # 1. errors are checked and empty output list is initialised
-        # 2. a list of ORIGINALLY disabled edges is created
+        # 1. a list of ORIGINALLY disabled edges is created
+        # 2. errors are checked and empty output list is initialised
         # 3. a list of UPDATED disabled edges is made with disabled_edge_id considered
 
         # 4. a list of edges is created: the list(zip()) functions pair each edge_id with
@@ -141,15 +141,15 @@ class GraphProcessor:
         # index is added to the output list alt_list[]
         # 7. after iterations end, the output list is printed
 
-        # 1. check if edge is not already disabled
+        # 1. create list of disabled edges
+        disabled_edges = [self.edge_ids[i] for i in range(len(self.edge_ids)) if not self.edge_enabled[i]]
+        # 2. check if edge is not already disabled
         if disabled_edge_id not in self.edge_ids:
             raise IDNotFoundError
-        if disabled_edge_id not in self.edge_enabled and disabled_edge_id in self.edge_ids:
+        if disabled_edge_id in disabled_edges:
             raise EdgeAlreadyDisabledError
+        
         alt_list = []
-
-        # 2. create a list of currently disabled edge IDs
-        disabled_edges = [self.edge_ids[i] for i in range(len(self.edge_ids)) if not self.edge_enabled[i]]
 
         # 3. create copy of list and update list
         disabled_edges_new = copy.copy(disabled_edges)
@@ -185,14 +185,16 @@ class GraphProcessor:
 
             nx.draw(new_graph)
 
-        try:
-            nr_cycles = nx.find_cycle(new_graph)
-        except nx.NetworkXNoCycle:
-            nr_cycles = 0
-        connected = nx.is_connected(new_graph)
+            try:
+                nr_cycles = nx.find_cycle(new_graph)
+            except nx.NetworkXNoCycle:
+                nr_cycles = 0
+            connected = nx.is_connected(new_graph)
 
-        if nr_cycles == 0 and connected is True:
-            alt_list.append(disabled_edges[i])
+            if nr_cycles == 0 and connected is True:
+                alt_list.append(disabled_edges[i])
+
             i += 1
+            
         # 7. print output
         return alt_list

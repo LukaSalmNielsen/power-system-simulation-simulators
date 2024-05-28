@@ -1,6 +1,7 @@
 import pytest 
 import unittest
 from power_system_simulation.graph_processing import (
+    EdgeAlreadyDisabledError,
     GraphProcessor
     )
 
@@ -17,3 +18,9 @@ def test_alternative_edges():
     assert graph.find_alternative_edges(1) == [7]
     assert graph.find_alternative_edges(5) == [8]
     assert graph.find_alternative_edges(9) == []
+
+
+def test_EdgeAlreadyDisabledError():
+    with pytest.raises(EdgeAlreadyDisabledError):
+        grid = GraphProcessor(vertex_ids, edge_ids, edge_vertex_id_pairs, edge_enabled, source_vertex_id)
+        grid.find_alternative_edges(7)
