@@ -1,9 +1,8 @@
-import pytest
 import unittest
 
-from power_system_simulation.graph_processing import(
-    GraphProcessor
-)
+import pytest
+
+from power_system_simulation.graph_processing import GraphProcessor
 
 vertex_ids = [0, 2, 4, 6, 10]
 edge_ids = [1, 3, 5, 7, 8, 9]
@@ -12,6 +11,7 @@ edge_enabled = [True, True, True, False, False, True]
 source_vertex_id = 10
 
 graph = GraphProcessor(vertex_ids, edge_ids, edge_vertex_id_pairs, edge_enabled, source_vertex_id)
+
 
 def test_DownstreamVertices():
     assert graph.find_downstream_vertices(1) == [0, 4, 6]

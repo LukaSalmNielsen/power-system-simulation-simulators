@@ -130,19 +130,19 @@ class GraphProcessor:
             return []
         # Get the vertices of the edge
         u, v = self.edge_vertex_id_pairs[index]
-    
+
         # Simulate the edge being disabled by temporarily removing it
         self.graph.remove_edge(u, v)
-    
+
         # Find all connected components after the removal
         components = list(nx.connected_components(self.graph))
-    
+
         # Restore the edge to maintain original graph state
         self.graph.add_edge(u, v)
 
         # Determine which component contains the source vertex
         source_component = next(comp for comp in components if self.source_vertex_id in comp)
-    
+
         # Return the nodes in the component that does not contain the source vertex
         for comp in components:
             if comp != source_component:
