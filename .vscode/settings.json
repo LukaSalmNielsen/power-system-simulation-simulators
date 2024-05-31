@@ -1,8 +1,11 @@
 {
     "python.testing.pytestArgs": [
-        "--no-cov"
+        "src"
     ],
     "python.testing.unittestEnabled": false,
     "python.testing.pytestEnabled": true,
-    "autoDocstring.docstringFormat": "google-notypes"
+    "autoDocstring.docstringFormat": "google-notypes",
+    "cSpell.words": [
+        "networkx"
+    ]
 }
