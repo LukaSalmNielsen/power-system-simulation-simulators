@@ -1,17 +1,17 @@
 # Load dependencies and functions from graph_processing
 import copy
 from typing import List, Tuple
+
 import networkx as nx
 
-from power_system_simulation.graph_processing import *
-
 # Load dependencies and functions from calculation_module
-import pandas as pd 
+import pandas as pd
 from power_grid_model import CalculationMethod, CalculationType, PowerGridModel, initialize_array, validation
 from power_grid_model.utils import json_deserialize, json_serialize_to_file
 from power_grid_model.validation import ValidationException, assert_valid_batch_data, assert_valid_input_data
 
 from power_system_simulation.calculation_module import *
+from power_system_simulation.graph_processing import *
 
 
 class power_system_simulation:
@@ -39,15 +39,13 @@ class power_system_simulation:
         with open(meta_data) as fp:
             meta_data = json_deserialize(fp.read())
 
-        if len(meta_data['source']) != 1:
+        if len(meta_data["source"]) != 1:
             raise
 
-        if len(meta_data['transformer']) != 1:
+        if len(meta_data["transformer"]) != 1:
             raise
 
         # Do power flow calculations with validity checks
         voltage_results, line_results = calculate_power_grid(
-                input_network_data, active_power_profile_path, reactive_power_profile_path
-            )
-        
-        
+            input_network_data, active_power_profile_path, reactive_power_profile_path
+        )
