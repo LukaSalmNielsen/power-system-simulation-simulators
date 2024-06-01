@@ -13,6 +13,44 @@ from power_grid_model.validation import ValidationException, assert_valid_batch_
 from power_system_simulation.calculation_module import *
 from power_system_simulation.graph_processing import *
 
+class invalidPGMData(Exception):
+    """empty for now"""
+
+
+class TooManyTransformers(Exception):
+    """empty for now"""
+
+
+class ITooManySources(Exception):
+    """empty for now"""
+
+
+class NotAllIDsareValid(Exception):
+    """empty for now"""
+
+
+class TheGridIsNotConnected(Exception):
+    """empty for now"""
+
+
+class TheGridHasCycles(Exception):
+    """empty for now"""
+
+
+class TheTimestampsDontMatch(Exception):
+    """empty for now"""
+
+
+class TheIDsDontMatch(Exception):
+    """empty for now"""
+
+
+class TheIDsAreNotValid(Exception):
+    """empty for now"""
+
+
+class TooFewEVs(Exception):
+    """empty for now"""
 
 class power_system_simulation:
     """_summary_
