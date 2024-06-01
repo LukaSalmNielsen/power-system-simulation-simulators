@@ -13,6 +13,7 @@ from power_grid_model.validation import ValidationException, assert_valid_batch_
 from power_system_simulation.calculation_module import *
 from power_system_simulation.graph_processing import *
 
+
 class invalidPGMData(Exception):
     """empty for now"""
 
@@ -51,6 +52,7 @@ class TheIDsAreNotValid(Exception):
 
 class TooFewEVs(Exception):
     """empty for now"""
+
 
 class power_system_simulation:
     """_summary_
