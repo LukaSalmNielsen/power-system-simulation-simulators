@@ -1,6 +1,7 @@
 # Load dependencies and functions from graph_processing
 import copy
-from typing import List, Tuple
+from typing import List, Tuple, Dict
+import json
 
 import networkx as nx
 
@@ -54,7 +55,7 @@ class power_system_simulation:
     (input_network_data: str), (meta_data: str), (active_power_profile_path: str), (reactive_power_profile_path: str), (ev_active_power_profile: str)
     """
     def __init__(
-        input_network_data: str, meta_data: str, active_power_profile_path: str, reactive_power_profile_path: str, ev_active_power_profile: str, 
+        input_network_data: str, meta_data_str: str, active_power_profile_path: str, reactive_power_profile_path: str, ev_active_power_profile: str, 
     ) -> Dict:
         """
         Check the following validity criteria for the input data. Raise or passthrough relevant errors.
@@ -71,28 +72,31 @@ class power_system_simulation:
         """
         # Do power flow calculations with validity checks
         # Load meta data and check 1 source and 1 transformer
-        with open(meta_data) as fp:
-            meta_data = json_deserialize(fp.read())
 
-        if len(meta_data["source"]) != 1:
+        with open(meta_data_str, 'r') as fp:
+            meta_data = json.load(fp)
+
+        if type(meta_data["source"]) != int:
             raise TooManySources("This Input data contains more than one source")
 
-        if len(meta_data["transformer"]) != 1:
+        if type(meta_data["transformer"]) != int:
             raise TooManyTransformers("This Input data contains more than one transformer")
 
         #read input data
-        with open(input_network_data) as fp:
+        with open(input_network_data, 'r') as fp:
             input_data = json_deserialize(fp.read())
+
         
         #validate data for PGM
         assert_valid_input_data(input_data=input_data, calculation_type=CalculationType.power_flow)
+        
 
-        for i in meta_data["lv_feeders"]:
-            if i not in input_data["line","id"]:
-                raise NotAllFeederIDsareValid("not all feeders corrospond to a line")
+        #for i in meta_data["lv_feeders"]:
+        #    if i not in input_data["line","id"]:
+        #        raise NotAllFeederIDsareValid("not all feeders corrospond to a line")
             
     
 
-        voltage_results, line_results = calculate_power_grid(
+        calculate_power_grid(
             input_network_data, active_power_profile_path, reactive_power_profile_path
         )
