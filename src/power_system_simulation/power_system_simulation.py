@@ -14,16 +14,17 @@ from src.power_system_simulation.calculation_module import *
 from src.power_system_simulation.graph_processing import *
 
 class TooManyTransformers(Exception):
-    """empty for now"""
+    """Done"""
 
 
 class TooManySources(Exception):
-    """empty for now"""
-
+    """Done"""
 
 class NotAllFeederIDsareValid(Exception):
-    """empty for now"""
+    """Done"""
 
+class TransformerAndFeedersnotconnected:
+    """Done"""
 
 class TheGridIsNotConnected(Exception):
     """empty for now"""
@@ -49,9 +50,8 @@ class TooFewEVs(Exception):
     """empty for now"""
 
 class power_system_simulation:
-    print("hallo")
     """_summary_
-    class that processes the data
+    (input_network_data: str), (meta_data: str), (active_power_profile_path: str), (reactive_power_profile_path: str), (ev_active_power_profile: str)
     """
     def __init__(
         input_network_data: str, meta_data: str, active_power_profile_path: str, reactive_power_profile_path: str, ev_active_power_profile: str, 
@@ -90,9 +90,9 @@ class power_system_simulation:
         for i in meta_data["lv_feeders"]:
             if i not in input_data["line","id"]:
                 raise NotAllFeederIDsareValid("not all feeders corrospond to a line")
+            
+    
 
         voltage_results, line_results = calculate_power_grid(
             input_network_data, active_power_profile_path, reactive_power_profile_path
         )
-
-power_system_simulation("meta_data.json")
