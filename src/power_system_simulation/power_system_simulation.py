@@ -1,7 +1,7 @@
 # Load dependencies and functions from graph_processing
 import copy
-from typing import List, Tuple, Dict
 import json
+from typing import Dict, List, Tuple
 
 import networkx as nx
 import numpy as np
@@ -15,6 +15,7 @@ from power_grid_model.validation import ValidationException, assert_valid_batch_
 from src.power_system_simulation.calculation_module import *
 from src.power_system_simulation.graph_processing import *
 
+
 class TooManyTransformers(Exception):
     """Done"""
 
@@ -22,8 +23,10 @@ class TooManyTransformers(Exception):
 class TooManySources(Exception):
     """Done"""
 
+
 class NotAllFeederIDsareValid(Exception):
     """Done"""
+
 
 class TransformerAndFeedersnotconnected:
     """working on it"""
@@ -36,12 +39,18 @@ class TheIDsAreNotValid(Exception):
 class TooFewEVs(Exception):
     """empty for now"""
 
+
 class power_system_simulation:
     """_summary_
     (input_network_data: str), (meta_data: str), (active_power_profile_path: str), (reactive_power_profile_path: str), (ev_active_power_profile: str)
     """
+
     def __init__(
-        input_network_data: str, meta_data_str: str, active_power_profile_path: str, reactive_power_profile_path: str, ev_active_power_profile: str, 
+        input_network_data: str,
+        meta_data_str: str,
+        active_power_profile_path: str,
+        reactive_power_profile_path: str,
+        ev_active_power_profile: str,
     ) -> Dict:
         """
         Check the following validity criteria for the input data. Raise or passthrough relevant errors.
@@ -59,7 +68,7 @@ class power_system_simulation:
         # Do power flow calculations with validity checks
         # Load meta data and check 1 source and 1 transformer
 
-        with open(meta_data_str, 'r') as fp:
+        with open(meta_data_str, "r") as fp:
             meta_data = json.load(fp)
 
         if type(meta_data["source"]) != int:
@@ -68,14 +77,13 @@ class power_system_simulation:
         if type(meta_data["transformer"]) != int:
             raise TooManyTransformers("This Input data contains more than one transformer")
 
-        #read input data
-        with open(input_network_data, 'r') as fp:
+        # read input data
+        with open(input_network_data, "r") as fp:
             input_data = json_deserialize(fp.read())
-
 
         line_ids = input_data["line"]["id"]
         feeder_ids = meta_data["lv_feeders"]
-        
+
         if not np.all(np.isin(feeder_ids, line_ids)):
             raise NotAllFeederIDsareValid("not all feeders are valid lines")
 
@@ -86,14 +94,13 @@ class power_system_simulation:
 
         for i in filtered_matrix:
             if i[1] != transformer:
-                raise TransformerAndFeedersnotconnected("not all feeders are connected to the transformer")       
+                raise TransformerAndFeedersnotconnected("not all feeders are connected to the transformer")
 
-        #validate data for PGM
+        # validate data for PGM
         assert_valid_input_data(input_data=input_data, calculation_type=CalculationType.power_flow)
-                  
-        #The graphprocessor can now be called 
-        
-        
-        #calculate_power_grid(
+
+        # The graphprocessor can now be called
+
+        # calculate_power_grid(
         #    input_network_data, active_power_profile_path, reactive_power_profile_path
-        #)
+        # )

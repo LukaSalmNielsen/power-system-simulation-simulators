@@ -16,9 +16,15 @@ active_power_profile_path = "src\\data\\input\\new_test_data\\Exception_test_dat
 reactive_power_profile_path = "src\\data\\input\\new_test_data\\Exception_test_data\\reactive_power_profile.parquet"
 
 # Incorrect input data
-modified_timestamp_active_power_profile_path = "src\\data\\input\\new_test_data\\Exception_test_data\\modified_timestamp_active_power_profile.parquet"
-modified_id_reactive_power_profile_path = "src\\data\\input\\new_test_data\\Exception_test_data\\modified_id_reactive_power_profile.parquet"
-modified_load_reactive_power_profile_path = "src\\data\\input\\new_test_data\\Exception_test_data\\modified_load_reactive_power_profile.parquet"
+modified_timestamp_active_power_profile_path = (
+    "src\\data\\input\\new_test_data\\Exception_test_data\\modified_timestamp_active_power_profile.parquet"
+)
+modified_id_reactive_power_profile_path = (
+    "src\\data\\input\\new_test_data\\Exception_test_data\\modified_id_reactive_power_profile.parquet"
+)
+modified_load_reactive_power_profile_path = (
+    "src\\data\\input\\new_test_data\\Exception_test_data\\modified_load_reactive_power_profile.parquet"
+)
 incorrect_network = "src\\data\\input\\new_test_data\\Exception_test_data\\incorrect_network.json"
 
 # Make incorrect timestamp
