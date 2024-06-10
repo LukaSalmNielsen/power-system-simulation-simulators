@@ -23,8 +23,7 @@ dependencies = [
   'pyarrow', 
   'cython',
   'wheel',
-  'setuptools',
-  'fastparquet'
+  'setuptools'
   ]
 version = "0.1"
 
@@ -34,7 +33,8 @@ dev = [
   'black',
   'isort',
   'pylint',
-  'pytest-cov'
+  'pytest-cov',
+  'matplotlib'
 ]
 
 # add more dependencies for running the examples

@@ -4,6 +4,7 @@ from typing import List, Tuple, Dict
 import json
 
 import networkx as nx
+import numpy as np
 
 # Load dependencies and functions from calculation_module
 import pandas as pd
@@ -25,22 +26,7 @@ class NotAllFeederIDsareValid(Exception):
     """Done"""
 
 class TransformerAndFeedersnotconnected:
-    """Done"""
-
-class TheGridIsNotConnected(Exception):
-    """empty for now"""
-
-
-class TheGridHasCycles(Exception):
-    """empty for now"""
-
-
-class TheTimestampsDontMatch(Exception):
-    """empty for now"""
-
-
-class TheIDsDontMatch(Exception):
-    """empty for now"""
+    """working on it"""
 
 
 class TheIDsAreNotValid(Exception):
@@ -60,15 +46,15 @@ class power_system_simulation:
         """
         Check the following validity criteria for the input data. Raise or passthrough relevant errors.
             * The LV grid should be a valid PGM input data. (This should already be checked in the calculation_module but just in case ill check here as well)
-            * The LV grid has exactly one transformer, and one source. (David made code that makes quite a bit of sense, just added the raises correctly)
-            * All IDs in the LV Feeder IDs are valid line IDs.
+            * The LV grid has exactly one transformer, and one source. (Done)
+            * All IDs in the LV Feeder IDs are valid line IDs. (Done)
             * All the lines in the LV Feeder IDs have the from_node the same as the to_node of the transformer.
-            * The grid is fully connected in the initial state.
-            * The grid has no cycles in the initial state.
-            * The timestamps are matching between the active load profile, reactive load profile, and EV charging profile.
-            * The IDs in active load profile and reactive load profile are matching.
-            * The IDs in active load profile and reactive load profile are valid IDs of sym_load.
-            * The number of EV charging profile is at least the same as the number of sym_load.
+            * The grid is fully connected in the initial state. (Done by calling graphprocessort)
+            * The grid has no cycles in the initial state.(Done by calling graphprocessort)
+            * The timestamps are matching between the active load profile, reactive load profile, and EV charging profile. (unsure, this might just be checkable in the calculation_module)
+            * The IDs in active load profile and reactive load profile are matching. (Done by Rick)
+            * The IDs in active load profile and reactive load profile are valid IDs of sym_load. (Done by Rick)
+            * The number of EV charging profile is at least the same as the number of sym_load. (this should also be checked there in calculation module I think)
         """
         # Do power flow calculations with validity checks
         # Load meta data and check 1 source and 1 transformer
@@ -86,17 +72,28 @@ class power_system_simulation:
         with open(input_network_data, 'r') as fp:
             input_data = json_deserialize(fp.read())
 
+
+        line_ids = input_data["line"]["id"]
+        feeder_ids = meta_data["lv_feeders"]
         
+        if not np.all(np.isin(feeder_ids, line_ids)):
+            raise NotAllFeederIDsareValid("not all feeders are valid lines")
+
+        line_Matrix = np.column_stack((input_data["line"]["id"], input_data["line"]["from_node"]))
+        mask = np.isin(line_Matrix[:, 0], feeder_ids)
+        filtered_matrix = line_Matrix[mask]
+        transformer = input_data["transformer"]["to_node"]
+
+        for i in filtered_matrix:
+            if i[1] != transformer:
+                raise TransformerAndFeedersnotconnected("not all feeders are connected to the transformer")       
+
         #validate data for PGM
         assert_valid_input_data(input_data=input_data, calculation_type=CalculationType.power_flow)
+                  
+        #The graphprocessor can now be called 
         
-
-        #for i in meta_data["lv_feeders"]:
-        #    if i not in input_data["line","id"]:
-        #        raise NotAllFeederIDsareValid("not all feeders corrospond to a line")
-            
-    
-
-        calculate_power_grid(
-            input_network_data, active_power_profile_path, reactive_power_profile_path
-        )
+        
+        #calculate_power_grid(
+        #    input_network_data, active_power_profile_path, reactive_power_profile_path
+        #)
