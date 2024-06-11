@@ -20,9 +20,10 @@ dependencies = [
   'pandas',
   'power_grid_model',
   'numpy',
-  'typing',
   'pyarrow', 
-  'fastparquet'
+  'cython',
+  'wheel',
+  'setuptools'
   ]
 version = "0.1"
 
@@ -32,14 +33,14 @@ dev = [
   'black',
   'isort',
   'pylint',
-  'pytest-cov'
+  'pytest-cov',
+  'matplotlib'
 ]
 
 # add more dependencies for running the examples
 example = [
   'jupyter',
   'matplotlib'
-
 ]
 
 [tool.setuptools.packages.find]
@@ -49,6 +50,9 @@ namespaces = false
 [tool.pytest.ini_options]
 testpaths = ["tests"]
 addopts = ["--cov=power_system_simulation", "--cov-report", "term", "--cov-report", "html:python_cov_html", "--cov-fail-under=5"]
+pythonpath = [
+  ".", "src",
+]
 
 [tool.black]
 line-length = 120
