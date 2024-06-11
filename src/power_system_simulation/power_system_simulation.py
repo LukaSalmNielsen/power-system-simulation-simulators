@@ -43,6 +43,7 @@ class TooFewEVs(Exception):
 class power_system_simulation:
     """_summary_
     (input_network_data: str), (meta_data: str), (active_power_profile_path: str), (reactive_power_profile_path: str), (ev_active_power_profile: str)
+    Checks and validates all of the data for this package.
     """
 
     def __init__(
