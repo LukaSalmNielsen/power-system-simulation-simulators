@@ -88,7 +88,6 @@ class power_system_simulation:
         if not np.all(np.isin(feeder_ids, line_ids)):
             raise NotAllFeederIDsareValid("not all feeders are valid lines")
 
-
         line_ids = input_data["line"]["id"]
         print(line_ids)
         feeder_ids = meta_data["lv_feeders"]
@@ -100,7 +99,7 @@ class power_system_simulation:
         print(filtered_matrix)
         transformer = input_data["transformer"]["to_node"]
         print(transformer)
-        
+
         for i in filtered_matrix:
             if i[1] != transformer:
                 raise TransformerAndFeedersNotConnected("not all feeders are connected to the transformer")

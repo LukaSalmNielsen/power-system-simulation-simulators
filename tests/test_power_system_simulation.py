@@ -8,9 +8,7 @@ metadata_Sources = "src\\data\\Exception_test_data\\meta_data_source.json"
 
 # wrong Input network
 input_network_feeders = "src\\data\\Exception_test_data\\input_network_data_feederID.json"
-input_network_feederTransformer = (
-    "src\\data\\Exception_test_data\\input_network_data_feederTransformer.json"
-)
+input_network_feederTransformer = "src\\data\\Exception_test_data\\input_network_data_feederTransformer.json"
 
 
 # correct input data
@@ -53,7 +51,7 @@ def test_TransformerAndFeedersNotConnected():
             metadata,
             active_power_profile,
             reactive_power_profile,
-            ev_active_power_profile
+            ev_active_power_profile,
         )
 
 

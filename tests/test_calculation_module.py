@@ -47,8 +47,12 @@ reactive_power_profile.iloc[0, 0] = 99999
 reactive_power_profile.to_parquet(modified_load_reactive_power_profile_path)
 
 # Correct output data
-check_table_voltage = pd.read_parquet("src\\data\Calculation_module_test\\expected_output\\output_table_row_per_timestamp.parquet")
-check_table_line = pd.read_parquet("src\\data\\Calculation_module_test\\expected_output\\output_table_row_per_line.parquet")
+check_table_voltage = pd.read_parquet(
+    "src\\data\Calculation_module_test\\expected_output\\output_table_row_per_timestamp.parquet"
+)
+check_table_line = pd.read_parquet(
+    "src\\data\\Calculation_module_test\\expected_output\\output_table_row_per_line.parquet"
+)
 
 # Make invalid network
 node_error = initialize_array("input", "node", 3)
