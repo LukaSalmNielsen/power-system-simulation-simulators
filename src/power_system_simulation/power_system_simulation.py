@@ -12,8 +12,8 @@ from power_grid_model import CalculationMethod, CalculationType, PowerGridModel,
 from power_grid_model.utils import json_deserialize, json_serialize_to_file
 from power_grid_model.validation import ValidationException, assert_valid_batch_data, assert_valid_input_data
 
-from src.power_system_simulation.calculation_module import *
-from src.power_system_simulation.graph_processing import *
+from . import calculation_module as calc
+from . import graph_processing as graph
 
 
 class TooManyTransformers(Exception):
@@ -47,6 +47,7 @@ class power_system_simulation:
     """
 
     def __init__(
+            self,
         input_network_data: str,
         meta_data_str: str,
         active_power_profile_path: str,
