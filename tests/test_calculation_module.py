@@ -1,9 +1,11 @@
+from pathlib import Path
+
 import pandas as pd
 import pytest
 from power_grid_model import CalculationMethod, CalculationType, PowerGridModel, initialize_array, validation
 from power_grid_model.utils import json_deserialize, json_serialize_to_file
 from power_grid_model.validation import ValidationException, assert_valid_batch_data, assert_valid_input_data
-from pathlib import Path
+
 from power_system_simulation.calculation_module import (
     LoadIdsDoNotMatchError,
     TimestampsDoNotMatchError,
@@ -11,7 +13,7 @@ from power_system_simulation.calculation_module import (
 )
 
 DATA_PATH = Path(__file__).parent / "data"
-DATA_EXCEPTION_SET = DATA_PATH / "Calculation_module_test" 
+DATA_EXCEPTION_SET = DATA_PATH / "Calculation_module_test"
 DATA_CALCULATION = DATA_EXCEPTION_SET / "input"
 
 
@@ -21,15 +23,9 @@ active_power_profile_path = DATA_CALCULATION / "active_power_profile.parquet"
 reactive_power_profile_path = DATA_CALCULATION / "reactive_power_profile.parquet"
 
 # Incorrect input data
-modified_timestamp_active_power_profile_path = (
-    DATA_CALCULATION / "modified_timestamp_active_power_profile.parquet"
-)
-modified_id_reactive_power_profile_path = (
-    DATA_CALCULATION / "modified_id_reactive_power_profile.parquet"
-)
-modified_load_reactive_power_profile_path = (
-    DATA_CALCULATION / "modified_load_reactive_power_profile.parquet"
-)
+modified_timestamp_active_power_profile_path = DATA_CALCULATION / "modified_timestamp_active_power_profile.parquet"
+modified_id_reactive_power_profile_path = DATA_CALCULATION / "modified_id_reactive_power_profile.parquet"
+modified_load_reactive_power_profile_path = DATA_CALCULATION / "modified_load_reactive_power_profile.parquet"
 incorrect_network = DATA_CALCULATION / "incorrect_network.json"
 
 # Make incorrect timestamp
@@ -52,12 +48,8 @@ reactive_power_profile.iloc[0, 0] = 99999
 reactive_power_profile.to_parquet(modified_load_reactive_power_profile_path)
 
 # Correct output data
-check_table_voltage = pd.read_parquet(
-    DATA_PATH / "expected_output" / "output_table_row_per_timestamp.parquet"
-)
-check_table_line = pd.read_parquet(
-    DATA_PATH / "expected_output" / "output_table_row_per_line.parquet"
-)
+check_table_voltage = pd.read_parquet(DATA_PATH / "expected_output" / "output_table_row_per_timestamp.parquet")
+check_table_line = pd.read_parquet(DATA_PATH / "expected_output" / "output_table_row_per_line.parquet")
 
 # Make invalid network
 node_error = initialize_array("input", "node", 3)
