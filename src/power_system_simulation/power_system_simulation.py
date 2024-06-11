@@ -28,7 +28,7 @@ class NotAllFeederIDsareValid(Exception):
     """Done"""
 
 
-class TransformerAndFeedersnotconnected:
+class TransformerAndFeedersNotConnected(Exception):
     """working on it"""
 
 
@@ -88,14 +88,22 @@ class power_system_simulation:
         if not np.all(np.isin(feeder_ids, line_ids)):
             raise NotAllFeederIDsareValid("not all feeders are valid lines")
 
+
+        line_ids = input_data["line"]["id"]
+        print(line_ids)
+        feeder_ids = meta_data["lv_feeders"]
+        print(feeder_ids)
         line_Matrix = np.column_stack((input_data["line"]["id"], input_data["line"]["from_node"]))
+        print(line_Matrix)
         mask = np.isin(line_Matrix[:, 0], feeder_ids)
         filtered_matrix = line_Matrix[mask]
+        print(filtered_matrix)
         transformer = input_data["transformer"]["to_node"]
-
+        print(transformer)
+        
         for i in filtered_matrix:
             if i[1] != transformer:
-                raise TransformerAndFeedersnotconnected("not all feeders are connected to the transformer")
+                raise TransformerAndFeedersNotConnected("not all feeders are connected to the transformer")
 
         # validate data for PGM
         assert_valid_input_data(input_data=input_data, calculation_type=CalculationType.power_flow)

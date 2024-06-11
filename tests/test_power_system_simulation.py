@@ -46,14 +46,14 @@ def test_NotAllFeederIDsareValid():
         )
 
 
-def test_TransformerAndFeedersnotconnected():
-    with pytest.raises(TransformerAndFeedersnotconnected):
+def test_TransformerAndFeedersNotConnected():
+    with pytest.raises(TransformerAndFeedersNotConnected):
         power_system_simulation.__init__(
             input_network_feederTransformer,
             metadata,
             active_power_profile,
             reactive_power_profile,
-            ev_active_power_profile,
+            ev_active_power_profile
         )
 
 
