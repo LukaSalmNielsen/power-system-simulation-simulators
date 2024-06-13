@@ -11,7 +11,7 @@ Returns:
 import numpy as np
 
 # Load dependencies and functions from calculation_module
-from calculation_module import *
+from . import calculation_module as calc
 from power_grid_model.utils import json_deserialize, json_serialize_to_file
 
 
@@ -22,7 +22,7 @@ class InvalidOptimizeInput(Exception):
 def optimal_tap_position(
     input_network_data: str, active_power_profile_path: str, reactive_power_profile_path: str, optimize_by
 ):
-    """_summary_
+    """summary
 
     Args:
         input_network_data
@@ -56,7 +56,7 @@ def optimal_tap_position(
         json_serialize_to_file(input_network_data, input_data)
 
         # run the power calculations
-        voltage_results, line_results = calculate_power_grid(
+        voltage_results, line_results = calc.calculate_power_grid(
             input_network_data, active_power_profile_path, reactive_power_profile_path
         )
 
