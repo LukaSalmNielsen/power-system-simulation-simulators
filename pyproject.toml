@@ -20,9 +20,10 @@ dependencies = [
   'pandas',
   'power_grid_model',
   'numpy',
-  'typing',
   'pyarrow', 
-  'fastparquet'
+  'cython',
+  'wheel',
+  'setuptools'
   ]
 version = "0.1"
 
@@ -32,14 +33,14 @@ dev = [
   'black',
   'isort',
   'pylint',
-  'pytest-cov'
+  'pytest-cov',
+  'matplotlib'
 ]
 
 # add more dependencies for running the examples
 example = [
   'jupyter',
   'matplotlib'
-
 ]
 
 [tool.setuptools.packages.find]
