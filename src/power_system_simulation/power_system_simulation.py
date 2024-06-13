@@ -16,27 +16,22 @@ from . import calculation_module as calc, graph_processing as graph
 
 
 class TooManyTransformers(Exception):
-    """Done"""
+    """The Transformer entry either is more than one or has an incorrect format"""
 
 
 class TooManySources(Exception):
-    """Done"""
+    """The Source entry either is more than one or has an incorrect format"""
 
 
 class NotAllFeederIDsareValid(Exception):
-    """Done"""
+    """The feeder IDs do not match the ids in the Network data"""
 
 
 class TransformerAndFeedersNotConnected(Exception):
-    """working on it"""
-
-
-class TheIDsAreNotValid(Exception):
-    """empty for now"""
-
+    """The transformer is not connected to the same node from which the feeders are connected"""
 
 class TooFewEVs(Exception):
-    """empty for now"""
+    """There are less EVs than Symloads, ensure that they are at least equal"""
 
 
 class power_system_simulation:
@@ -67,39 +62,49 @@ class power_system_simulation:
             * The number of EV charging profile is at least the same as the number of sym_load. (this should also be checked there in calculation module I think)
         """
         # Do power flow calculations with validity checks
-        # Load meta data and check 1 source and 1 transformer
+        # Read and load input data
+    
+        ev_power_profile = pd.read_parquet(ev_active_power_profile)
 
         with open(meta_data_str, "r") as fp:
             meta_data = json.load(fp)
 
-        if type(meta_data["source"]) != int:
-            raise TooManySources("This Input data contains more than one source")
-
-        if type(meta_data["transformer"]) != int:
-            raise TooManyTransformers("This Input data contains more than one transformer")
-
-        # read input data
         with open(input_network_data, "r") as fp:
             input_data = json_deserialize(fp.read())
 
+        #ensure that there is only ever one Source
+        if type(meta_data["source"]) != int:
+            raise TooManySources("This Input data contains more than one source")
+
+        #ensure that there is only ever one Transformer
+        if type(meta_data["transformer"]) != int:
+            raise TooManyTransformers("This Input data contains more than one transformer")
+
+        #filter the line ids and feeders
         line_ids = input_data["line"]["id"]
         feeder_ids = meta_data["lv_feeders"]
 
+        #Compare the contents of the feeders and line ids to ensure that they match, throw an exception if they don't
         if not np.all(np.isin(feeder_ids, line_ids)):
             raise NotAllFeederIDsareValid("not all feeders are valid lines")
 
+        #Filter the Symloads and count them, do the same for the number of EV-profiles 
+        no_house = len(input_data['sym_load'])
+        a = np.matrix(ev_power_profile)
+
+        #Compare the number of EV-profiles to the Number of symloads, if the number of symloads is more than the amount of EVs then throw an exception
+        if not a.shape[1] < no_house: 
+            raise TooFewEVs("not enough EV_profiles")
+        
+        #Filter the matrix in order to find the number of transformers vs the number of feeders and then compare their to and from nodes
         line_ids = input_data["line"]["id"]
-        print(line_ids)
         feeder_ids = meta_data["lv_feeders"]
-        print(feeder_ids)
         line_Matrix = np.column_stack((input_data["line"]["id"], input_data["line"]["from_node"]))
-        print(line_Matrix)
         mask = np.isin(line_Matrix[:, 0], feeder_ids)
         filtered_matrix = line_Matrix[mask]
-        print(filtered_matrix)
         transformer = input_data["transformer"]["to_node"]
-        print(transformer)
 
+        #compare the to nodes of the transformer to the from nodes from the feeders and throw an exception if it doesn't allign
         for i in filtered_matrix:
             if i[1] != transformer:
                 raise TransformerAndFeedersNotConnected("not all feeders are connected to the transformer")
@@ -107,8 +112,32 @@ class power_system_simulation:
         # validate data for PGM
         assert_valid_input_data(input_data=input_data, calculation_type=CalculationType.power_flow)
 
-        # The graphprocessor can now be called
+        ##########The graphprocessor can now be called to check that no exceptions are called##########
+        ######ORIGINAL DATA
+        ##pprint.pprint(input_data)
+        vertex_ids = input_data['node']['id']
+        edge_ids_init = pd.DataFrame(input_data['line']['id']).to_numpy()
+        edge_vertex_id_pairs_init = list(zip(input_data['line']['from_node'], input_data['line']['to_node']))
+        edge_enabled_init = (input_data['line']['from_status'] == 1) & (input_data['line']['to_status'] == 1)
+        source_id = input_data['node'][0][0] # or meta_data
 
-        # calculate_power_grid(
-        #    input_network_data, active_power_profile_path, reactive_power_profile_path
-        # )
+        ########### MODIFIED DATA FOR TRANSFORMER AS EDGE
+        vertex_ids = vertex_ids
+        edge_ids = np.append(edge_ids_init, input_data['transformer']['id']).tolist()
+        edge_vertex_id_pairs = (edge_vertex_id_pairs_init) + [(source_id,input_metadata['lv_busbar'])]
+        edge_enabled = np.append(edge_enabled_init,[True])
+        source_id = source_id
+
+        ############################
+        # call GraphProcessing.py  #
+        ############################
+        G = gp(vertex_ids = vertex_ids, edge_ids= edge_ids, edge_vertex_id_pairs= edge_vertex_id_pairs, edge_enabled= edge_enabled, source_vertex_id= source_id)       
+
+
+        ##########Now the calculation module is called to see if any exceptions are called.##########
+        ############################
+        # call calculation_module.py  #
+        ############################
+        voltage_results, line_results = calc(
+            input_network_data, active_power_profile_path, reactive_power_profile_path
+        )
