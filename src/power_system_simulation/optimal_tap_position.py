@@ -9,10 +9,10 @@ Returns:
 """
 
 import numpy as np
+from power_grid_model.utils import json_deserialize, json_serialize_to_file
 
 # Load dependencies and functions from calculation_module
 from . import calculation_module as calc
-from power_grid_model.utils import json_deserialize, json_serialize_to_file
 
 
 class InvalidOptimizeInput(Exception):
