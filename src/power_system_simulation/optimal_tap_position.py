@@ -7,6 +7,7 @@ Raises:
 Returns:
     optimal tap position of the transformer for either minimum total losses (0) or minimum voltage deviation (1)
 """
+
 from pathlib import Path
 
 import numpy as np
