@@ -2,7 +2,7 @@ from pathlib import Path
 
 import pytest
 
-import power_system_simulation.power_system_simulation as pss
+import power_system_simulation.power_system_simulators as pss
 
 DATA_PATH = Path(__file__).parent / "data"
 DATA_EXCEPTION_SET = DATA_PATH / "Exception_test_data"

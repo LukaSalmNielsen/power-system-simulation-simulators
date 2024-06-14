@@ -9,10 +9,10 @@ Returns:
 """
 
 import numpy as np
+from power_grid_model.utils import json_deserialize, json_serialize_to_file
 
 # Load dependencies and functions from calculation_module
 from . import calculation_module as calc
-from power_grid_model.utils import json_deserialize, json_serialize_to_file
 
 
 class InvalidOptimizeInput(Exception):
@@ -45,6 +45,7 @@ def optimal_tap_position(
     # Determine min and max tap position
     pos_min = np.take(input_data["transformer"]["tap_min"], 0)
     pos_max = np.take(input_data["transformer"]["tap_max"], 0)
+    pos_cur = np.take(input_data["transformer"]["tap_pos"], 0)
 
     print(pos_min, pos_max)
 
@@ -77,6 +78,10 @@ def optimal_tap_position(
             if average_dev_max_node_min > average_dev_max_node:
                 average_dev_max_node_min = average_dev_max_node
                 average_dev_min_tap_pos = tap_pos
+
+    # Set file back to original tap position
+    input_data["transformer"]["tap_pos"] = pos_cur
+    json_serialize_to_file(input_network_data, input_data)
 
     if optimize_by == 0:
         return total_losses_min_tap_pos
