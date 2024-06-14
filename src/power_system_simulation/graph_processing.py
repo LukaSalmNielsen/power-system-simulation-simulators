@@ -149,7 +149,6 @@ class GraphProcessor:
                 return list(comp)
 
     def find_alternative_edges(self, disabled_edge_id: int) -> List[int]:
-
         ############################################################
         "Done by Carmelo Vella, 02/05/2024"
 
@@ -193,7 +192,6 @@ class GraphProcessor:
         # iterate disabled_edges:
         i = 0
         while i < len(disabled_edges):
-
             # for each originally disabled edge, a new graph is created in which a new list of edges is
             # created (i.e. said edge is now enabled)
             temp_full_edge_list = [
