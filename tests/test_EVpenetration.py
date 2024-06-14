@@ -1,7 +1,8 @@
-import power_system_simulation.EVpenetration as EV
 from pathlib import Path
 
 import pytest
+
+import power_system_simulation.EVpenetration as EV
 
 DATA_PATH = Path(__file__).parent / "data"
 DATA_EXCEPTION_SET = DATA_PATH / "Exception_test_data"
@@ -17,4 +18,4 @@ P = 75
 Seed = 34
 
 
-EV.EVpenetration(input_network,metadata,active_power_profile,ev_active_power_profile,P,Seed)
+EV.EVpenetration(input_network, metadata, active_power_profile, ev_active_power_profile, P, Seed)
