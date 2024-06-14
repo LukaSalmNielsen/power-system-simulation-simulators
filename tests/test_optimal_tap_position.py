@@ -6,7 +6,7 @@ import pytest
 import power_system_simulation.optimal_tap_position as otp
 
 # Input data
-DATA_PATH = Path(__file__).parent / "data" / "power_system_simulators_test" / "Exception_test_data"
+DATA_PATH = Path(__file__).parent / "data" / "Exception_test_data"
 
 input_network_data = DATA_PATH / "input_network_data.json"
 active_power_profile_path = DATA_PATH / "active_power_profile.parquet"
