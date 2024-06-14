@@ -60,29 +60,29 @@ def EVpenetration(input_network_data: str,
     
     # Get the number of feeders
     no_feeders = len(input_metadata.get('lv_feeders', []))
-    print(f'The number of feeders in the lv_feeders array is: {no_feeders}')
+    #print(f'The number of feeders in the lv_feeders array is: {no_feeders}')
     
     # Get the number of sym_load entries
     no_house = len(input_data['sym_load'])
-    print(f'The number of sym_load entries is: {no_house}')
+    #print(f'The number of sym_load entries is: {no_house}')
     
     # Calculate EV_feeder using math.floor to round down
     EV_feeder = math.floor((percentage / 100) * no_house / no_feeders)
-    print(f'The number of EVs per feeder is: {EV_feeder}')
+    #print(f'The number of EVs per feeder is: {EV_feeder}')
     
     # Print all sym_load node IDs and corresponding IDs
-    print("Sym_load IDs and their nodes:")
+    """print("Sym_load IDs and their nodes:")
     for i in range(no_house):
         print(f"ID: {input_data['sym_load'][i]['id']}, Node: {input_data['sym_load'][i]['node']}")
-    
+    """ 
     # Dictionary to store which sym_load belongs to which feeder
     feeder_to_loads = {feeder: [] for feeder in input_metadata['lv_feeders']}
     selected_ids = []
     # Iterate through each feeder and call the function gp.find_downstream_vertices
     for feeder in input_metadata['lv_feeders']:
-        print(f'Processing feeder: {feeder}')
+        #print(f'Processing feeder: {feeder}')
         downstream_vertices = G.find_downstream_vertices(feeder)
-        print(f'Downstream vertices for {feeder}: {downstream_vertices}')
+        #print(f'Downstream vertices for {feeder}: {downstream_vertices}')
         
         # Check if sym_load node ids are found within the returned list
         matched_loads = [load['id'] for load in input_data['sym_load'] if load['node'] in downstream_vertices]
@@ -94,12 +94,12 @@ def EVpenetration(input_network_data: str,
             selected_ids.extend(selected_ids_for_feeder)
     
     filtered_profile = active_power_profile[selected_ids]
-    print("Filtered active_power_profile DataFrame:")
-    print(filtered_profile)
+    #print("Filtered active_power_profile DataFrame:")
+    #print(filtered_profile)
     
     # Print the mapping of feeders to loads
-    for feeder, loads in feeder_to_loads.items():
-        print(f'Feeder {feeder} has selected loads: {loads}')
+    """for feeder, loads in feeder_to_loads.items():
+        print(f'Feeder {feeder} has selected loads: {loads}')"""
     
     # Randomly select an equal number of columns from ev_power_profile
     num_selected = len(selected_ids)
@@ -113,8 +113,8 @@ def EVpenetration(input_network_data: str,
     # Perform element-wise addition of the filtered profiles
     summed_profile = filtered_profile.add(selected_ev_profile, fill_value=0)
     
-    print("Summed Profile DataFrame:")
-    print(summed_profile)
+    #print("Summed Profile DataFrame:")
+    #print(summed_profile)
     
     update_sym_load = initialize_array("update", "sym_load", summed_profile.shape)
     update_sym_load['id'] = summed_profile.columns.to_numpy()

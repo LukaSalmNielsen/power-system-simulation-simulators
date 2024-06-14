@@ -13,8 +13,8 @@ input_network = DATA_EXCEPTION_SET / "input_network_data.json"
 active_power_profile = DATA_EXCEPTION_SET / "active_power_profile.parquet"
 ev_active_power_profile = DATA_EXCEPTION_SET / "ev_active_power_profile.parquet"
 
-P = 50
-Seed = 41
+P = 75
+Seed = 34
 
 
 EV.EVpenetration(input_network,metadata,active_power_profile,ev_active_power_profile,P,Seed)
