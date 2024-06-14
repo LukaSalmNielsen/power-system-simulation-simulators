@@ -24,7 +24,7 @@ def EVpenetration(input_network_data: str,
 
 
     """"""
-    with open(input_network_data) as fp:
+    with open(input_network_data, 'r') as fp:
         input_data = json_deserialize(fp.read(input_network_data))
     assert_valid_input_data(input_data=input_data, calculation_type=CalculationType.power_flow)
     model = PowerGridModel(input_data=input_data)
@@ -191,5 +191,3 @@ def EVpenetration(input_network_data: str,
 
     # Return aggregated results
     return voltage_df, line_df
-
-EVpenetration(50, 41)
