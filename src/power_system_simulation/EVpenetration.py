@@ -1,13 +1,14 @@
+import copy
+from typing import Dict, List, Tuple
+import networkx as nx
+import numpy as np
 import json
 import time
 import math
 import random
-from typing import Dict
 from IPython.display import display
 import pprint
-import numpy as np
 import pandas as pd
-import networkx as nx
 import matplotlib as plt
 from power_grid_model import CalculationMethod, CalculationType, PowerGridModel, initialize_array
 from power_grid_model.utils import json_deserialize, json_serialize
@@ -21,18 +22,20 @@ def EVpenetration(input_network_data: str,
         ev_active_power_profile: str,
         percentage: float,
         seed: int)-> tuple:
-
-
     """"""
-    with open(input_network_data, 'r') as fp:
-        input_data = json_deserialize(fp.read(input_network_data))
-    assert_valid_input_data(input_data=input_data, calculation_type=CalculationType.power_flow)
-    model = PowerGridModel(input_data=input_data)
-    with open(meta_data_str, 'r') as file:
-        input_metadata = json.load(file)
+
+    print(input_network_data)
+
+    with open(meta_data_str, "r") as fp:
+        input_metadata = json.load(fp)
+
+    with open(input_network_data, "r") as fp:
+        input_data = json_deserialize(fp.read())
 
     active_power_profile = pd.read_parquet(active_power_profile_path)
     ev_power_profile = pd.read_parquet(ev_active_power_profile)
+
+    model = PowerGridModel(input_data=input_data)
 
     vertex_ids = input_data['node']['id']
     edge_ids_init = pd.DataFrame(input_data['line']['id']).to_numpy()

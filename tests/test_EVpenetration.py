@@ -5,7 +5,7 @@ import pytest
 
 DATA_PATH = Path(__file__).parent / "data"
 DATA_EXCEPTION_SET = DATA_PATH / "Exception_test_data"
-print(DATA_PATH)
+
 
 # correct input data
 metadata = DATA_EXCEPTION_SET / "meta_data.json"
