@@ -34,7 +34,7 @@ class TooFewEVs(Exception):
     """There are less EVs than Symloads, ensure that they are at least equal"""
 
 
-class power_system_simulation:
+class validate_power_system_simulation:
     """_summary_
     (input_network_data: str), (meta_data: str), (active_power_profile_path: str), (reactive_power_profile_path: str), (ev_active_power_profile: str)
     Checks and validates all of the data for this package.
@@ -93,7 +93,7 @@ class power_system_simulation:
         a = np.matrix(ev_power_profile)
 
         #Compare the number of EV-profiles to the Number of symloads, if the number of symloads is more than the amount of EVs then throw an exception
-        if not a.shape[1] < no_house: 
+        if not a.shape[1] >= no_house: 
             raise TooFewEVs("not enough EV_profiles")
         
         #Filter the matrix in order to find the number of transformers vs the number of feeders and then compare their to and from nodes
@@ -124,20 +124,20 @@ class power_system_simulation:
         ########### MODIFIED DATA FOR TRANSFORMER AS EDGE
         vertex_ids = vertex_ids
         edge_ids = np.append(edge_ids_init, input_data['transformer']['id']).tolist()
-        edge_vertex_id_pairs = (edge_vertex_id_pairs_init) + [(source_id,input_metadata['lv_busbar'])]
+        edge_vertex_id_pairs = (edge_vertex_id_pairs_init) + [(source_id,meta_data['lv_busbar'])]
         edge_enabled = np.append(edge_enabled_init,[True])
         source_id = source_id
 
         ############################
         # call GraphProcessing.py  #
         ############################
-        G = gp(vertex_ids = vertex_ids, edge_ids= edge_ids, edge_vertex_id_pairs= edge_vertex_id_pairs, edge_enabled= edge_enabled, source_vertex_id= source_id)       
+        graph.GraphProcessor(vertex_ids,edge_ids,edge_vertex_id_pairs,edge_enabled,source_id)       
 
 
         ##########Now the calculation module is called to see if any exceptions are called.##########
         ############################
         # call calculation_module.py  #
         ############################
-        voltage_results, line_results = calc(
+        voltage_results, line_results = calc.calculate_power_grid(
             input_network_data, active_power_profile_path, reactive_power_profile_path
         )
