@@ -7,6 +7,7 @@ Raises:
 Returns:
     optimal tap position of the transformer for either minimum total losses (0) or minimum voltage deviation (1)
 """
+from pathlib import Path
 
 import numpy as np
 from power_grid_model.utils import json_deserialize, json_serialize_to_file
@@ -42,6 +43,9 @@ def optimal_tap_position(
     with open(input_network_data) as fp:
         input_data = json_deserialize(fp.read())
 
+    # Make new directory to ensure original file does not change
+    input_network_data_alt = Path(input_network_data).parent / "input_network_data_alt.json"
+
     # Determine min and max tap position
     pos_min = np.take(input_data["transformer"]["tap_min"], 0)
     pos_max = np.take(input_data["transformer"]["tap_max"], 0)
@@ -54,11 +58,11 @@ def optimal_tap_position(
         input_data["transformer"]["tap_pos"] = tap_pos
 
         # Make sure tap position is changed in the file
-        json_serialize_to_file(input_network_data, input_data)
+        json_serialize_to_file(input_network_data_alt, input_data)
 
         # run the power calculations
         voltage_results, line_results = calc.calculate_power_grid(
-            input_network_data, active_power_profile_path, reactive_power_profile_path
+            input_network_data_alt, active_power_profile_path, reactive_power_profile_path
         )
 
         # get deviation of max node voltage
@@ -78,10 +82,6 @@ def optimal_tap_position(
             if average_dev_max_node_min > average_dev_max_node:
                 average_dev_max_node_min = average_dev_max_node
                 average_dev_min_tap_pos = tap_pos
-
-    # Set file back to original tap position
-    input_data["transformer"]["tap_pos"] = pos_cur
-    json_serialize_to_file(input_network_data, input_data)
 
     if optimize_by == 0:
         return total_losses_min_tap_pos
