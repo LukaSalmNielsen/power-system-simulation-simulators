@@ -6,7 +6,6 @@ import unittest
 from datetime import datetime, timedelta
 from pathlib import Path
 from typing import Dict
-
 import matplotlib.pyplot as plt
 import networkx as nx
 import numpy as np
@@ -28,10 +27,6 @@ active_power_profile_path = DATA_EXCEPTION_SET / "active_power_profile.parquet"
 reactive_power_profile_path = DATA_EXCEPTION_SET / "reactive_power_profile.parquet"
 
 
-## Test1. ID not valid error
-
-
-## Test3.
 def test_Nm1_scenario_class():
     assert nm_file.Nm_function(
         18, input_network_path, metadata_path, active_power_profile_path, reactive_power_profile_path

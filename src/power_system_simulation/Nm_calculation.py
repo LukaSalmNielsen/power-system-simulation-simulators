@@ -41,25 +41,6 @@ class Timer:
         print(f"Execution time for {self.name} is {(time.perf_counter() - self.start):0.6f} s")
 
 
-"""class Nm_scenario_class:
-    Class for performing the N-1 calculation given an alternative line ID
-    
-    def __init__(
-            self,
-            given_lineID: int,
-            input_data_path: str,
-            metadata_path: str,
-            active_power_profile_path: str,
-            reactive_power_profile_path: str
-        ) -> list[int]:
-
-        self.given_lineID = given_lineID
-        self.input_data_path = input_data_path
-        self.metadata_path = metadata_path
-        self.active_power_profile_path = active_power_profile_path
-        self.reactive_power_profile_path = reactive_power_profile_path
-"""
-
 
 def Nm_function(
     given_lineID: int,

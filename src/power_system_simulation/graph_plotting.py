@@ -9,6 +9,7 @@ import matplotlib.pyplot as plt
 import networkx as nx
 import numpy as np
 import pandas as pd
+from pathlib import Path
 from IPython.display import display
 from power_grid_model import CalculationMethod, CalculationType, PowerGridModel, initialize_array
 from power_grid_model.utils import json_deserialize, json_serialize
@@ -17,17 +18,28 @@ from prettytable import PrettyTable
 
 from power_system_simulation.graph_processing import GraphProcessor as gp
 
+######################################################################
+# Data path handling (used for calling the class Nm1_calculation.py) #
+######################################################################
+
+DATA_PATH = Path(__file__).parent / "data"
+DATA_EXCEPTION_SET = DATA_PATH / "Exception_test_data"
+metadata_path = DATA_EXCEPTION_SET / "meta_data.json"
+input_network_path = DATA_EXCEPTION_SET / "input_network_data.json"
+active_power_profile_path = DATA_EXCEPTION_SET / "active_power_profile.parquet"
+reactive_power_profile_path = DATA_EXCEPTION_SET / "reactive_power_profile.parquet"
+
 #################################################################
 # open all input data (input data, active pprof, reactive pprof)#
 #################################################################
 
 with open(
-    "C:/Users/carme/OneDrive/Desktop/Q4/Power_system_computation_and_simulation/assignment_3/big_network/input/input_network_data.json"
+    input_network_path
 ) as fp:
     input_data = json_deserialize(fp.read())
 assert_valid_input_data(input_data=input_data, calculation_type=CalculationType.power_flow)
 with open(
-    "C:/Users/carme/OneDrive/Desktop/Q4/Power_system_computation_and_simulation/assignment_3/big_network/input/meta_data.json",
+    metadata_path,
     "r",
 ) as file:
     meta_data = json.load(file)
