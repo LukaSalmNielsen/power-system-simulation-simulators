@@ -1,19 +1,21 @@
-import unittest
-import pytest
-import json
-import time
 import copy
-from typing import Dict
-from IPython.display import display
+import json
 import pprint
+import time
+import unittest
+from datetime import datetime, timedelta
+from pathlib import Path
+from typing import Dict
+
+import matplotlib.pyplot as plt
+import networkx as nx
 import numpy as np
 import pandas as pd
-from pathlib import Path
-from datetime import datetime, timedelta
-import networkx as nx
-import matplotlib.pyplot as plt
+import pytest
+from IPython.display import display
 
 import power_system_simulation.Nm_calculation as nm_file
+
 ######################################################################
 # Data path handling (used for calling the class Nm1_calculation.py) #
 ######################################################################
@@ -28,9 +30,12 @@ reactive_power_profile_path = DATA_EXCEPTION_SET / "reactive_power_profile.parqu
 
 ## Test1. ID not valid error
 
+
 ## Test3.
 def test_Nm1_scenario_class():
-    assert(nm_file.Nm_function(18,input_network_path,metadata_path,active_power_profile_path,reactive_power_profile_path)==[24])
+    assert nm_file.Nm_function(
+        18, input_network_path, metadata_path, active_power_profile_path, reactive_power_profile_path
+    ) == [24]
     """assert(nm1.Nm_scenario_class(17,input_network_path,metadata_path,active_power_profile_path,reactive_power_profile_path)==[])
     assert(nm1.Nm_scenario_class(23,input_network_path,metadata_path,active_power_profile_path,reactive_power_profile_path)==[])
     assert(nm1.Nm_scenario_class(20,input_network_path,metadata_path,active_power_profile_path,reactive_power_profile_path)==[24])"""
