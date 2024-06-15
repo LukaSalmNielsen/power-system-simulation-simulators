@@ -41,7 +41,6 @@ class Timer:
         print(f"Execution time for {self.name} is {(time.perf_counter() - self.start):0.6f} s")
 
 
-
 def Nm_function(
     given_lineID: int,
     input_data_path: str,

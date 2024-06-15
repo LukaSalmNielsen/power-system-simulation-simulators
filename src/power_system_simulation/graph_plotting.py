@@ -3,13 +3,13 @@ import json
 import pprint
 import time
 from datetime import datetime, timedelta
+from pathlib import Path
 from typing import Dict
 
 import matplotlib.pyplot as plt
 import networkx as nx
 import numpy as np
 import pandas as pd
-from pathlib import Path
 from IPython.display import display
 from power_grid_model import CalculationMethod, CalculationType, PowerGridModel, initialize_array
 from power_grid_model.utils import json_deserialize, json_serialize
@@ -33,9 +33,7 @@ reactive_power_profile_path = DATA_EXCEPTION_SET / "reactive_power_profile.parqu
 # open all input data (input data, active pprof, reactive pprof)#
 #################################################################
 
-with open(
-    input_network_path
-) as fp:
+with open(input_network_path) as fp:
     input_data = json_deserialize(fp.read())
 assert_valid_input_data(input_data=input_data, calculation_type=CalculationType.power_flow)
 with open(
