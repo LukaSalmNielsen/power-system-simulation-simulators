@@ -138,6 +138,3 @@ class validate_power_system_simulation:
         ############################
         # call calculation_module.py  #
         ############################
-        voltage_results, line_results = calc.calculate_power_grid(
-            input_network_data, active_power_profile_path, reactive_power_profile_path
-        )
