@@ -23,7 +23,8 @@ dependencies = [
   'pyarrow', 
   'cython',
   'wheel',
-  'setuptools'
+  'setuptools',
+  'prettytable'
   ]
 version = "0.1"
 
@@ -34,7 +35,7 @@ dev = [
   'isort',
   'pylint',
   'pytest-cov',
-  'matplotlib'
+  'matplotlib',
 ]
 
 # add more dependencies for running the examples
