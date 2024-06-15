@@ -257,7 +257,6 @@ class GraphProcessor:
         # iterate disabled_edges:
         i = 0
         while i < len(disabled_edges):
-
             # for each originally disabled edge, a new graph is created in which a new list of edges is
             # created (i.e. said edge is now enabled)
             temp_full_edge_list = [
