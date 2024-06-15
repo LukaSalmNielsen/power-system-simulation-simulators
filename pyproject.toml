@@ -34,7 +34,8 @@ dev = [
   'isort',
   'pylint',
   'pytest-cov',
-  'matplotlib'
+  'matplotlib',
+  'prettytable'
 ]
 
 # add more dependencies for running the examples
