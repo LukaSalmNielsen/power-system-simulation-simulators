@@ -22,8 +22,12 @@ class InvalidOptimizeInput(Exception):
 
 
 def optimal_tap_position(
-    input_network_data: str, active_power_profile_path: str, reactive_power_profile_path: str, optimize_by
-):
+    input_network_data: str,
+    active_power_profile_path: str,
+    reactive_power_profile_path: str,
+    optimize_by
+) -> int:
+    
     """summary
 
     Args:

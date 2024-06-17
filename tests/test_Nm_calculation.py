@@ -1,20 +1,6 @@
-import copy
-import json
-import pprint
-import time
-import unittest
-from datetime import datetime, timedelta
 from pathlib import Path
-from typing import Dict
-
-import matplotlib.pyplot as plt
-import networkx as nx
-import numpy as np
-import pandas as pd
 import pytest
-from IPython.display import display
-
-from power_system_simulation.nm_calculation import *
+import power_system_simulation.nm_calculation as nm_file
 
 ######################################################################
 # Data path handling (used for calling the class Nm1_calculation.py) #
@@ -29,6 +15,6 @@ reactive_power_profile_path = DATA_EXCEPTION_SET / "reactive_power_profile.parqu
 
 
 def test_nm_scenario_class():
-    assert nm_function(
+    assert nm_file.nm_function(
         18, input_network_path, metadata_path, active_power_profile_path, reactive_power_profile_path
     ) == [24]
