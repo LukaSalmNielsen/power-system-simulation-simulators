@@ -9,16 +9,15 @@ import json
 import time
 from datetime import datetime, timedelta
 
-
 import numpy as np
 import pandas as pd
-
 from power_grid_model import CalculationMethod, CalculationType, PowerGridModel, initialize_array
 from power_grid_model.utils import json_deserialize
 from power_grid_model.validation import assert_valid_input_data
 from prettytable import PrettyTable
 
 from power_system_simulation.graph_processing import GraphProcessor as gp
+
 
 class IDNotFoundError(Exception):
     """The inserted line ID is not valid"""
@@ -28,7 +27,6 @@ class lineIDnotConnectedOnBothSides(Exception):
     """The insterted line ID is not connected at both sides"""
 
 
-
 ################################################
 # TIME CLASS for tracking time in calculations #
 ################################################
@@ -36,6 +34,7 @@ class lineIDnotConnectedOnBothSides(Exception):
 
 class Timer:
     """TIME CLASS for tracking time in calculations"""
+
     def __init__(self, name: str):
         self.name = name
         self.start = None
