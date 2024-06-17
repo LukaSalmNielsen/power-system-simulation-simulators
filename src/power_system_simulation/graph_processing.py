@@ -207,8 +207,6 @@ class GraphProcessor:
                 if enabled:
                     new_graph.add_edge(*vertex_pair, id=self.edge_ids)
 
-            nx.draw(new_graph)
-
             try:
                 nr_cycles = nx.find_cycle(new_graph)
             except nx.NetworkXNoCycle:
