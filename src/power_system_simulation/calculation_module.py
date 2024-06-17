@@ -1,7 +1,8 @@
 """
 Power Grid Calculation Module
 
-This script performs power flow analysis on a given power grid network using provided active and reactive power profile data.
+This script performs power flow analysis on a given power grid network 
+using provided active and reactive power profile data.
 It calculates voltage statistics and line loading information based on the power flow results.
 
 Authors: Rick Eversdijk, Luka Nielsen, Carmelo Vella, David van Warmerdam, Codrin Dănculea
