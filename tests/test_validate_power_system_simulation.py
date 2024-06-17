@@ -27,34 +27,28 @@ ev_active_power_profile = DATA_EXCEPTION_SET / "ev_active_power_profile.parquet"
 
 def test_TooManyTransformers():
     with pytest.raises(pss.TooManyTransformers):
-        pss.validate_power_system_simulation(
-            input_network, metadata_transformers, ev_active_power_profile
-        )
+        pss.validate_power_system_simulation(input_network, metadata_transformers, ev_active_power_profile)
 
 
 def test_TooManySources():
     with pytest.raises(pss.TooManySources):
-        pss.validate_power_system_simulation(
-            input_network, metadata_Sources, ev_active_power_profile
-        )
+        pss.validate_power_system_simulation(input_network, metadata_Sources, ev_active_power_profile)
 
 
 def test_NotAllFeederIDsareValid():
     with pytest.raises(pss.NotAllFeederIDsareValid):
-        pss.validate_power_system_simulation(
-            input_network_feeders, metadata, ev_active_power_profile
-        )
+        pss.validate_power_system_simulation(input_network_feeders, metadata, ev_active_power_profile)
 
 
 def test_TransformerAndFeedersNotConnected():
     with pytest.raises(pss.TransformerAndFeedersNotConnected):
         pss.validate_power_system_simulation(
-            input_network_feederTransformer, metadata, ev_active_power_profile,
+            input_network_feederTransformer,
+            metadata,
+            ev_active_power_profile,
         )
 
 
 def test_TooFewEVs():
     with pytest.raises(pss.TooFewEVs):
-        pss.validate_power_system_simulation(
-            input_network_EV, metadata, ev_active_power_profile
-        )
+        pss.validate_power_system_simulation(input_network_EV, metadata, ev_active_power_profile)

@@ -20,7 +20,6 @@ Date: 10/06/2024
 
 """
 
-
 # Load dependencies and functions from graph_processing
 import json
 from typing import Dict
@@ -68,6 +67,7 @@ class validate_power_system_simulation:
     """_summary_
     (input_network_data: str), (meta_data: str), (ev_active_power_profile: str) Checks and validates all of the data for this package.
     """
+
     def __init__(
         self,
         input_network_data: str,
@@ -76,7 +76,7 @@ class validate_power_system_simulation:
     ) -> Dict:
         """
         Check the following validity criteria for the input data. Raise or passthrough relevant errors.
-            * The LV grid should be a valid PGM input data. 
+            * The LV grid should be a valid PGM input data.
             * The LV grid has exactly one transformer, and one source.
             * All IDs in the LV Feeder IDs are valid line IDs.
             * All the lines in the LV Feeder IDs have the from_node the same as the to_node of the transformer.
@@ -93,14 +93,12 @@ class validate_power_system_simulation:
 
         ev_power_profile = pd.read_parquet(ev_active_power_profile)
 
-
         # Specify the encoding explicitly when opening the files
         with open(meta_data_str, "r", encoding="utf-8") as fp:
             meta_data = json.load(fp)
 
         with open(input_network_data, "r", encoding="utf-8") as fp:
             input_data = json_deserialize(fp.read())
-
 
         # Check if "source" in meta_data is not an int
         if not isinstance(meta_data["source"], int):
@@ -109,7 +107,6 @@ class validate_power_system_simulation:
         # Check if "transformer" in meta_data is not an int
         if not isinstance(meta_data["transformer"], int):
             raise TooManyTransformers("This Input data contains more than one transformer")
-
 
         # filter the line ids and feeders
         line_ids = input_data["line"]["id"]
