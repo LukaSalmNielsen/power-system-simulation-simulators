@@ -35,6 +35,14 @@ class TooFewEVs(Exception):
     """There are less EVs than Symloads, ensure that they are at least equal"""
 
 
+# class TimestampsDoNotMatchError(Exception):
+#    """Exception raised when Timestamps of active and reactive power profiles do not match."""
+
+
+# class LoadIdsDoNotMatchError(Exception):
+#    """Exception raised when Load IDs of active and reactive power profiles do not match."""
+
+
 class validate_power_system_simulation:
     """_summary_
     (input_network_data: str), (meta_data: str), (active_power_profile_path: str), (reactive_power_profile_path: str), (ev_active_power_profile: str)
@@ -66,6 +74,7 @@ class validate_power_system_simulation:
         # Read and load input data
 
         ev_power_profile = pd.read_parquet(ev_active_power_profile)
+        active_power_profile = pd.read_parquet(active_power_profile_path)
 
         with open(meta_data_str, "r") as fp:
             meta_data = json.load(fp)
@@ -104,6 +113,12 @@ class validate_power_system_simulation:
         mask = np.isin(line_Matrix[:, 0], feeder_ids)
         filtered_matrix = line_Matrix[mask]
         transformer = input_data["transformer"]["to_node"]
+
+        # Check if timestamps and load IDs match
+        # if not ev_power_profile.index.equals(active_power_profile.index):
+        #    raise TimestampsDoNotMatchError("Timestamps of active and reactive power profiles do not match.")
+        # if not (ev_power_profile.columns == active_power_profile.columns).all():
+        #    raise LoadIdsDoNotMatchError("Load IDs of active and reactive power profiles do not match.")
 
         # compare the to nodes of the transformer to the from nodes from the feeders and throw an exception if it doesn't allign
         for i in filtered_matrix:
