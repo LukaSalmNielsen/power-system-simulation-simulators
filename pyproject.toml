@@ -24,7 +24,8 @@ dependencies = [
   'cython',
   'wheel',
   'setuptools',
-  'prettytable'
+  'prettytable',
+  'scipy'
   ]
 version = "0.1"
 
@@ -36,7 +37,7 @@ dev = [
   'pylint',
   'pytest-cov',
   'matplotlib',
-]
+  ]
 
 # add more dependencies for running the examples
 example = [
@@ -50,7 +51,7 @@ namespaces = false
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]
-addopts = ["--cov=power_system_simulation", "--cov-report", "term", "--cov-report", "html:python_cov_html", "--cov-fail-under=5"]
+addopts = ["--cov=power_system_simulation", "--cov-report", "term", "--cov-report", "html:python_cov_html", "--cov-fail-under=90"]
 pythonpath = [
   ".", "src",
 ]
