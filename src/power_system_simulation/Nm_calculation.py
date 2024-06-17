@@ -6,11 +6,8 @@
 
 import copy
 import json
-import pprint
 import time
 from datetime import datetime, timedelta
-from pathlib import Path
-from typing import Dict
 
 import matplotlib.pyplot as plt
 import networkx as nx
@@ -48,7 +45,6 @@ def Nm_function(
     active_power_profile_path: str,
     reactive_power_profile_path: str,
 ) -> list[int]:
-
     #################################
     # Open data from provided paths #
     #################################
@@ -78,12 +74,11 @@ def Nm_function(
     ########### MODIFIED DATA FOR TRANSFORMER AS EDGE
 
     # Transformer must be added as edge -> add one more edge_vertex_id_pair: (0,1)
-    # one more edge enabled (True) and one more edge id (tranformer id). They can all be appended at the end of the list(s)
-    vertex_ids = vertex_ids
+    # one more edge enabled (True) and one more edge id (tranformer id). 
+    # They can all be appended at the end of the list(s)
     edge_ids = np.append(edge_ids_init, input_data["transformer"]["id"])
     edge_vertex_id_pairs = (edge_vertex_id_pairs_init) + [(source_id, meta_data["lv_busbar"])]
     edge_enabled = np.append(edge_enabled_init, [True])
-    source_id = source_id
 
     ############################
     # call GraphProcessing.py  #

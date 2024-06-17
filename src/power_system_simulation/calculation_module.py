@@ -14,9 +14,9 @@ from typing import Dict
 
 import numpy as np
 import pandas as pd
-from power_grid_model import CalculationMethod, CalculationType, PowerGridModel, initialize_array, validation
+from power_grid_model import CalculationMethod, CalculationType, PowerGridModel, initialize_array
 from power_grid_model.utils import json_deserialize
-from power_grid_model.validation import ValidationException, assert_valid_batch_data, assert_valid_input_data
+from power_grid_model.validation import assert_valid_batch_data, assert_valid_input_data
 
 
 class TimestampsDoNotMatchError(Exception):
@@ -42,8 +42,8 @@ def calculate_power_grid(
         Dict: Aggregated power flow results containing voltage statistics and line loading information.
     """
     # Load input network data
-    with open(input_network_data) as fp:
-        input_data = json_deserialize(fp.read())
+    with open(input_network_data, "r", encoding="utf-8") as fp_open:
+        input_data = json_deserialize(fp_open.read())
 
     # Validate input data
     assert_valid_input_data(input_data=input_data, calculation_type=CalculationType.power_flow)
