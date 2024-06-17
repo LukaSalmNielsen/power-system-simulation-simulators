@@ -17,6 +17,7 @@ import pandas as pd
 from power_grid_model import CalculationMethod, CalculationType, PowerGridModel, initialize_array
 from power_grid_model.utils import json_deserialize
 from power_grid_model.validation import assert_valid_batch_data
+
 from power_system_simulation.graph_processing import GraphProcessor as gp
 
 
