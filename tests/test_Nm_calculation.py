@@ -28,10 +28,7 @@ active_power_profile_path = DATA_EXCEPTION_SET / "active_power_profile.parquet"
 reactive_power_profile_path = DATA_EXCEPTION_SET / "reactive_power_profile.parquet"
 
 
-def test_Nm1_scenario_class():
+def test_nm1_scenario_class():
     assert nm_file.nm_function(
         18, input_network_path, metadata_path, active_power_profile_path, reactive_power_profile_path
     ) == [24]
-    """assert(nm1.Nm_scenario_class(17,input_network_path,metadata_path,active_power_profile_path,reactive_power_profile_path)==[])
-    assert(nm1.Nm_scenario_class(23,input_network_path,metadata_path,active_power_profile_path,reactive_power_profile_path)==[])
-    assert(nm1.Nm_scenario_class(20,input_network_path,metadata_path,active_power_profile_path,reactive_power_profile_path)==[24])"""
