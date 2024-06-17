@@ -1,18 +1,38 @@
-# Load dependencies and functions from graph_processing
-import copy
-import json
-from typing import Dict, List, Tuple
+"""
+Validation Module
 
-import networkx as nx
+This script defines a validation class with the following exceptions 
+- **TimestampsDoNotMatchError** (Timestamps of active and reactive power profiles do not match.)
+- **LoadIdsDoNotMatchError** (Load IDs of active and reactive power profiles do not match.)
+- **IDNotFoundError** (Vertex ID present in edge_vertex_id_pairs does not exist.)
+- **InputLengthDoesNotMatchError** (The amount of vertex pairs is not equal to the amount of edges.)
+- **IDNotUniqueError** (vertex and edge ids are not unique.)
+- **GraphNotFullyConnectedError** (Graph not fully connected)
+- **GraphCycleError** (The graph contains cycles.)
+- **TooManyTransformers** (This Input data contains more than one transformer)
+- **TooManySources** (This Input data contains more than one source)
+- **NotAllFeederIDsareValid** (not all feeders are valid lines)
+- **TransformerAndFeedersNotConnected** (Feeders and transformers are not connected to the same graph)
+- **TooFewEVs** (there are less EVs profiles than symloads)
+
+Authors: Rick Eversdijk, Luka Nielsen, Carmelo Vella, David van Warmerdam, Codrin Dănculea
+Date: 10/06/2024
+
+"""
+
+# Load dependencies and functions from graph_processing
+import json
+from typing import Dict
+
 import numpy as np
 
 # Load dependencies and functions from calculation_module
 import pandas as pd
-from power_grid_model import CalculationMethod, CalculationType, PowerGridModel, initialize_array, validation
-from power_grid_model.utils import json_deserialize, json_serialize_to_file
-from power_grid_model.validation import ValidationException, assert_valid_batch_data, assert_valid_input_data
+from power_grid_model import CalculationType
+from power_grid_model.utils import json_deserialize
+from power_grid_model.validation import assert_valid_input_data
 
-from . import calculation_module as calc, graph_processing as graph
+from power_system_simulation import graph_processing as graph
 
 
 class TooManyTransformers(Exception):
@@ -35,50 +55,57 @@ class TooFewEVs(Exception):
     """There are less EVs than Symloads, ensure that they are at least equal"""
 
 
+# class TimestampsDoNotMatchError(Exception):
+#    """Exception raised when Timestamps of active and reactive power profiles do not match."""
+
+
+# class LoadIdsDoNotMatchError(Exception):
+#    """Exception raised when Load IDs of active and reactive power profiles do not match."""
+
+
 class validate_power_system_simulation:
     """_summary_
-    (input_network_data: str), (meta_data: str), (active_power_profile_path: str), (reactive_power_profile_path: str), (ev_active_power_profile: str)
-    Checks and validates all of the data for this package.
+    (input_network_data: str), (meta_data: str), (ev_active_power_profile: str) Checks and validates all of the data for this package.
     """
 
     def __init__(
         self,
         input_network_data: str,
         meta_data_str: str,
-        active_power_profile_path: str,
-        reactive_power_profile_path: str,
         ev_active_power_profile: str,
     ) -> Dict:
         """
         Check the following validity criteria for the input data. Raise or passthrough relevant errors.
-            * The LV grid should be a valid PGM input data. (This should already be checked in the calculation_module but just in case ill check here as well)
-            * The LV grid has exactly one transformer, and one source. (Done)
-            * All IDs in the LV Feeder IDs are valid line IDs. (Done)
+            * The LV grid should be a valid PGM input data.
+            * The LV grid has exactly one transformer, and one source.
+            * All IDs in the LV Feeder IDs are valid line IDs.
             * All the lines in the LV Feeder IDs have the from_node the same as the to_node of the transformer.
-            * The grid is fully connected in the initial state. (Done by calling graphprocessort)
-            * The grid has no cycles in the initial state.(Done by calling graphprocessort)
-            * The timestamps are matching between the active load profile, reactive load profile, and EV charging profile. (unsure, this might just be checkable in the calculation_module)
-            * The IDs in active load profile and reactive load profile are matching. (Done by Rick)
-            * The IDs in active load profile and reactive load profile are valid IDs of sym_load. (Done by Rick)
-            * The number of EV charging profile is at least the same as the number of sym_load. (this should also be checked there in calculation module I think)
+            * The grid is fully connected in the initial state.
+            * The grid has no cycles in the initial state.
+            * The timestamps are matching between the active load profile, reactive load profile,
+            and EV charging profile.
+            * The IDs in active load profile and reactive load profile are matching.
+            * The IDs in active load profile and reactive load profile are valid IDs of sym_load.
+            * The number of EV charging profile is at least the same as the number of sym_load.
         """
         # Do power flow calculations with validity checks
         # Read and load input data
 
         ev_power_profile = pd.read_parquet(ev_active_power_profile)
 
-        with open(meta_data_str, "r") as fp:
+        # Specify the encoding explicitly when opening the files
+        with open(meta_data_str, "r", encoding="utf-8") as fp:
             meta_data = json.load(fp)
 
-        with open(input_network_data, "r") as fp:
+        with open(input_network_data, "r", encoding="utf-8") as fp:
             input_data = json_deserialize(fp.read())
 
-        # ensure that there is only ever one Source
-        if type(meta_data["source"]) != int:
+        # Check if "source" in meta_data is not an int
+        if not isinstance(meta_data["source"], int):
             raise TooManySources("This Input data contains more than one source")
 
-        # ensure that there is only ever one Transformer
-        if type(meta_data["transformer"]) != int:
+        # Check if "transformer" in meta_data is not an int
+        if not isinstance(meta_data["transformer"], int):
             raise TooManyTransformers("This Input data contains more than one transformer")
 
         # filter the line ids and feeders
@@ -93,11 +120,13 @@ class validate_power_system_simulation:
         no_house = len(input_data["sym_load"])
         a = np.matrix(ev_power_profile)
 
-        # Compare the number of EV-profiles to the Number of symloads, if the number of symloads is more than the amount of EVs then throw an exception
+        # Compare the number of EV-profiles to the Number of symloads
+        # if the number of symloads is more than the amount of EVs then throw an exception
         if not a.shape[1] >= no_house:
             raise TooFewEVs("not enough EV_profiles")
 
-        # Filter the matrix in order to find the number of transformers vs the number of feeders and then compare their to and from nodes
+        # Filter the matrix in order to find the number of transformers vs the number
+        # of feeders and then compare their to and from nodes
         line_ids = input_data["line"]["id"]
         feeder_ids = meta_data["lv_feeders"]
         line_Matrix = np.column_stack((input_data["line"]["id"], input_data["line"]["from_node"]))
@@ -105,7 +134,14 @@ class validate_power_system_simulation:
         filtered_matrix = line_Matrix[mask]
         transformer = input_data["transformer"]["to_node"]
 
-        # compare the to nodes of the transformer to the from nodes from the feeders and throw an exception if it doesn't allign
+        # Check if timestamps and load IDs match
+        # if not ev_power_profile.index.equals(active_power_profile.index):
+        #    raise TimestampsDoNotMatchError("Timestamps of active and reactive power profiles do not match.")
+        # if not (ev_power_profile.columns == active_power_profile.columns).all():
+        #    raise LoadIdsDoNotMatchError("Load IDs of active and reactive power profiles do not match.")
+
+        # compare the to nodes of the transformer to the from nodes
+        # from the feeders and throw an exception if it doesn't allign
         for i in filtered_matrix:
             if i[1] != transformer:
                 raise TransformerAndFeedersNotConnected("not all feeders are connected to the transformer")
@@ -123,18 +159,11 @@ class validate_power_system_simulation:
         source_id = input_data["node"][0][0]  # or meta_data
 
         ########### MODIFIED DATA FOR TRANSFORMER AS EDGE
-        vertex_ids = vertex_ids
         edge_ids = np.append(edge_ids_init, input_data["transformer"]["id"]).tolist()
         edge_vertex_id_pairs = (edge_vertex_id_pairs_init) + [(source_id, meta_data["lv_busbar"])]
         edge_enabled = np.append(edge_enabled_init, [True])
-        source_id = source_id
 
         ############################
         # call GraphProcessing.py  #
         ############################
         graph.GraphProcessor(vertex_ids, edge_ids, edge_vertex_id_pairs, edge_enabled, source_id)
-
-        ##########Now the calculation module is called to see if any exceptions are called.##########
-        ############################
-        # call calculation_module.py  #
-        ############################

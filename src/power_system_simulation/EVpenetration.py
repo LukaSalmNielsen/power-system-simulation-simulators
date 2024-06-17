@@ -1,19 +1,11 @@
-import copy
 import json
 import math
-import pprint
 import random
-import time
-from typing import Dict, List, Tuple
 
-import matplotlib as plt
-import networkx as nx
 import numpy as np
 import pandas as pd
-from IPython.display import display
 from power_grid_model import CalculationMethod, CalculationType, PowerGridModel, initialize_array
-from power_grid_model.utils import json_deserialize, json_serialize
-from power_grid_model.validation import assert_valid_batch_data, assert_valid_input_data
+from power_grid_model.utils import json_deserialize
 
 from power_system_simulation.graph_processing import GraphProcessor as gp
 
