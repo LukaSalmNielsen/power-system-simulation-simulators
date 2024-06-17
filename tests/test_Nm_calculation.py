@@ -14,7 +14,7 @@ import pandas as pd
 import pytest
 from IPython.display import display
 
-import power_system_simulation.nm_calculation as nm_file
+from power_system_simulation.nm_calculation import *
 
 ######################################################################
 # Data path handling (used for calling the class Nm1_calculation.py) #
@@ -28,7 +28,7 @@ active_power_profile_path = DATA_EXCEPTION_SET / "active_power_profile.parquet"
 reactive_power_profile_path = DATA_EXCEPTION_SET / "reactive_power_profile.parquet"
 
 
-def test_nm1_scenario_class():
-    assert nm_file.nm_function(
+def test_nm_scenario_class():
+    assert nm_function(
         18, input_network_path, metadata_path, active_power_profile_path, reactive_power_profile_path
     ) == [24]
