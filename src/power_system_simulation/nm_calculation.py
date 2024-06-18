@@ -53,7 +53,6 @@ def nm_function(
     active_power_profile_path: str,
     reactive_power_profile_path: str,
 ) -> list[int]:
-    
     """module responsible for calculating the N-1 Scenarios"""
     #################################
     # Open data from provided paths #

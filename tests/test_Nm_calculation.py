@@ -1,5 +1,7 @@
 from pathlib import Path
+
 import pytest
+
 import power_system_simulation.nm_calculation as nm_file
 
 ######################################################################
