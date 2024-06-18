@@ -23,7 +23,7 @@ class InvalidOptimizeInput(Exception):
 
 def optimal_tap_position(
     input_network_data: str, active_power_profile_path: str, reactive_power_profile_path: str, optimize_by
-):
+) -> int:
     """summary
 
     Args:
@@ -50,9 +50,6 @@ def optimal_tap_position(
     # Determine min and max tap position
     pos_min = np.take(input_data["transformer"]["tap_min"], 0)
     pos_max = np.take(input_data["transformer"]["tap_max"], 0)
-    pos_cur = np.take(input_data["transformer"]["tap_pos"], 0)
-
-    print(pos_min, pos_max)
 
     # Cycle through all tap positions and change the current tap position
     for tap_pos in range(pos_max, pos_min + 1):
